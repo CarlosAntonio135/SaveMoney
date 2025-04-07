@@ -1,1 +1,1 @@
-apenas uma forma simples de controlar gastos e ganhos de forma dinamica e objetiva
+Controle seus gastos com o SaveMoney. Uma plataforma intuitiva e segura para organizar suas finanças, gerar relatórios e visualizar seu saldo com clareza.
