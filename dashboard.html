@@ -1,18 +1,19 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard - SaveMoney</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>SaveMoney - Login</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="dashboard-container">
-        <h1>Bem-vindo ao SaveMoney</h1>
-        <p>Painel de controle financeiro.</p>
-        <a href="register.html" class="btn btn-secundario">Registrar novo usuário</a>
-        <a href="index.html" class="btn">Ir para o app</a>
-    </div>
+  <div id="login-container">
+    <h1>Login</h1>
+    <input type="text" id="username" placeholder="Nome de usuário">
+    <input type="password" id="password" placeholder="Senha">
+    <button onclick="login()">Entrar</button>
+    <p id="login-error" class="error"></p>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
