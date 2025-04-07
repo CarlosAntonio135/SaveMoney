@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SaveMoney</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <img src="logo-savemoney.png" alt="SaveMoney Logo" class="logo" />
+    <div class="formulario">
+      <input type="text" id="descricao" placeholder="Descrição" />
+      <input type="number" id="valor" placeholder="Valor" />
+      <select id="tipo">
+        <option value="entrada">Entrada</option>
+        <option value="saida">Saída</option>
+      </select>
+      <input type="date" id="data" />
+      <button onclick="adicionarTransacao()">Adicionar</button>
+    </div>
+
+    <div class="resumo">
+      <p>Entradas: <span id="totalEntradas">R$ 0,00</span></p>
+      <p>Saídas: <span id="totalSaidas">R$ 0,00</span></p>
+      <p>Saldo Final: <span id="saldoFinal">R$ 0,00</span></p>
+    </div>
+
+    <canvas id="grafico" width="400" height="200"></canvas>
+
+    <div class="export-buttons">
+      <button onclick="exportarPDF()">Exportar PDF</button>
+      <button onclick="exportarExcel()">Exportar Excel</button>
+    </div>
+
+    <div id="listaTransacoes"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

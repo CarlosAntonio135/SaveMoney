@@ -1,0 +1,62 @@
+
+body {
+  background-color: #111;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+.container {
+  max-width: 800px;
+  margin: auto;
+}
+.logo {
+  width: 250px;
+  display: block;
+  margin: 0 auto 20px auto;
+}
+.formulario input, .formulario select {
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+}
+.formulario button {
+  width: 100%;
+  padding: 10px;
+  background: gold;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.resumo p {
+  font-size: 18px;
+  margin: 10px 0;
+}
+#listaTransacoes div {
+  background-color: #222;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 6px;
+}
+.export-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+.export-buttons button {
+  background-color: #444;
+  color: gold;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.export-buttons button:hover {
+  background-color: #666;
+}
