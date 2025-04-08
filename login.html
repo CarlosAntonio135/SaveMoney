@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>SaveMoney - Login com Google</title>
+</head>
+<body>
+  <h1>Login no SaveMoney</h1>
+  <button onclick="loginComGoogle()">Entrar com Google</button>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCmw9A3WecBRr19MhIX5-wKLf66r-voig",
+      authDomain: "savemoney-7b401.firebaseapp.com",
+      projectId: "savemoney-7b401",
+      storageBucket: "savemoney-7b401.appspot.com",
+      messagingSenderId: "255294640344",
+      appId: "1:255294640344:web:58b7b0cd89a79c2c8a6f92"
+    };
+
+    // Inicializar Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Login com Google
+    function loginComGoogle() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+          const user = result.user;
+          alert(`Bem-vindo, ${user.displayName}`);
+          window.location.href = "home.html"; // Redirecionar após login
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("Erro ao fazer login com Google.");
+        });
+    }
+  </script>
+</body>
+</html>
