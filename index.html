@@ -2,43 +2,44 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SaveMoney</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <meta charset="UTF-8">
+  <title>SaveMoney - Login com Google</title>
 </head>
 <body>
-  <div class="container">
-    <img src="logo-savemoney.png" alt="SaveMoney Logo" class="logo" />
-    <div class="formulario">
-      <input type="text" id="descricao" placeholder="Descrição" />
-      <input type="number" id="valor" placeholder="Valor" />
-      <select id="tipo">
-        <option value="entrada">Entrada</option>
-        <option value="saida">Saída</option>
-      </select>
-      <input type="date" id="data" />
-      <button onclick="adicionarTransacao()">Adicionar</button>
-    </div>
+  <h1>Login no SaveMoney</h1>
+  <button onclick="loginComGoogle()">Entrar com Google</button>
 
-    <div class="resumo">
-      <p>Entradas: <span id="totalEntradas">R$ 0,00</span></p>
-      <p>Saídas: <span id="totalSaidas">R$ 0,00</span></p>
-      <p>Saldo Final: <span id="saldoFinal">R$ 0,00</span></p>
-    </div>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
 
-    <canvas id="grafico" width="400" height="200"></canvas>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCmw9A3WecBRr19MhIX5-wKLf66r-voig",
+      authDomain: "savemoney-7b401.firebaseapp.com",
+      projectId: "savemoney-7b401",
+      storageBucket: "savemoney-7b401.appspot.com",
+      messagingSenderId: "255294640344",
+      appId: "1:255294640344:web:58b7b0cd89a79c2c8a6f92"
+    };
 
-    <div class="export-buttons">
-      <button onclick="exportarPDF()">Exportar PDF</button>
-      <button onclick="exportarExcel()">Exportar Excel</button>
-    </div>
+    // Inicializar Firebase
+    firebase.initializeApp(firebaseConfig);
 
-    <div id="listaTransacoes"></div>
-  </div>
-  <script src="script.js"></script>
+    // Login com Google
+    function loginComGoogle() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+          const user = result.user;
+          alert(`Bem-vindo, ${user.displayName}`);
+          window.location.href = "home.html"; // Redirecionar após login
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("Erro ao fazer login com Google.");
+        });
+    }
+  </script>
 </body>
 </html>
