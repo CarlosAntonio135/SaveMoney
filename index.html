@@ -1,45 +1,68 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SaveMoney - Login com Google</title>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 100px;
+      background-color: #f1f1f1;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
   <h1>Login no SaveMoney</h1>
   <button onclick="loginComGoogle()">Entrar com Google</button>
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
+  <!-- Firebase login config -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-  <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyCmw9A3WecBRr19MhIX5-wKLf66r-voig",
-      authDomain: "savemoney-7b401.firebaseapp.com",
-      projectId: "savemoney-7b401",
-      storageBucket: "savemoney-7b401.appspot.com",
-      messagingSenderId: "255294640344",
-      appId: "1:255294640344:web:58b7b0cd89a79c2c8a6f92"
+      apiKey: "SUA_API_KEY",
+      authDomain: "SEU_DOMINIO.firebaseapp.com",
+      projectId: "SEU_PROJECT_ID",
+      storageBucket: "SEU_BUCKET.appspot.com",
+      messagingSenderId: "SEU_SENDER_ID",
+      appId: "SUA_APP_ID"
     };
 
-    // Inicializar Firebase
-    firebase.initializeApp(firebaseConfig);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
-    // Login com Google
-    function loginComGoogle() {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      firebase.auth().signInWithPopup(provider)
+    window.loginComGoogle = function () {
+      signInWithPopup(auth, provider)
         .then((result) => {
           const user = result.user;
-          alert(`Bem-vindo, ${user.displayName}`);
-          window.location.href = "home.html"; // Redirecionar após login
+          console.log("Usuário logado:", user.displayName);
+          alert(`Bem-vindo(a), ${user.displayName}`);
+          window.location.href = "home.html"; // redireciona após login
         })
         .catch((error) => {
-          console.error(error);
-          alert("Erro ao fazer login com Google.");
+          console.error("Erro no login:", error);
+          alert("Erro ao fazer login com o Google.");
         });
-    }
+    };
   </script>
 </body>
 </html>
