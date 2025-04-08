@@ -1,72 +1,42 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SaveMoney - Login com Google</title>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SaveMoney - Login com Google</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script src="firebase-config.js"></script>
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js" type="module"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js" type="module"></script>
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 h-screen flex items-center justify-center">
+    <div class="bg-white shadow-lg rounded-2xl p-10 w-full max-w-md text-center">
+      <h1 class="text-3xl font-bold mb-6 text-gray-800">Login no <span class="text-purple-600">SaveMoney</span></h1>
+      <button
+        onclick="loginWithGoogle()"
+        class="bg-white text-gray-700 border border-gray-300 hover:border-purple-500 hover:text-purple-600 font-semibold py-2 px-6 rounded-full shadow-sm transition duration-200 flex items-center justify-center mx-auto"
+      >
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5 mr-2" />
+        Entrar com Google
+      </button>
+    </div>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding-top: 100px;
-      background-color: #f9f9f9;
-    }
+    <script>
+      const auth = firebase.auth();
+      const provider = new firebase.auth.GoogleAuthProvider();
 
-    h1 {
-      margin-bottom: 20px;
-    }
-
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <h1>Login no SaveMoney</h1>
-  <button onclick="loginComGoogle()">Entrar com Google</button>
-
-  <!-- Firebase login script -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCmw9A3WvecBRr19MhIX5-wKLf66r-voig",
-      authDomain: "savemoney-7b401.firebaseapp.com",
-      projectId: "savemoney-7b401",
-      storageBucket: "savemoney-7b401.firebasestorage.app",
-      messagingSenderId: "1036605042056",
-      appId: "1:1036605042056:web:1d5ee679915dba328c5e3d",
-      measurementId: "G-LX8LY8FF6M"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    getAnalytics(app);
-
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
-
-    window.loginComGoogle = function () {
-      signInWithPopup(auth, provider)
-        .then((result) => {
-          const user = result.user;
-          alert(`Bem-vindo, ${user.displayName}!`);
-          console.log(user);
-          window.location.href = "home.html"; // redireciona após login
-        })
-        .catch((error) => {
-          console.error(error);
-          alert("Erro ao fazer login com o Google.");
-        });
-    };
-  </script>
-</body>
+      function loginWithGoogle() {
+        auth.signInWithPopup(provider)
+          .then((result) => {
+            // Usuário logado com sucesso
+            window.location.href = "home.html"; // redireciona após login
+          })
+          .catch((error) => {
+            alert("Erro ao fazer login com o Google.\n" + error.message);
+            console.error(error);
+          });
+      }
+    </script>
+  </body>
 </html>
