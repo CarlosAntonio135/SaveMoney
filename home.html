@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>SaveMoney - Página Inicial</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js" type="module"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js" type="module"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f1f1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    #user-info {
+      margin: 20px 0;
+      font-size: 18px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #e60000;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Bem-vindo ao SaveMoney</h1>
+    <div id="user-info">Carregando informações do usuário...</div>
+    <button onclick="logout()">Sair</button>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCmw9A3WvecBRr19MhIX5-wKLf66r-voig",
+      authDomain: "savemoney-7b401.firebaseapp.com",
+      projectId: "savemoney-7b401",
+      storageBucket: "savemoney-7b401.firebasestorage.app",
+      messagingSenderId: "1036605042056",
+      appId: "1:1036605042056:web:1d5ee679915dba328c5e3d",
+      measurementId: "G-LX8LY8FF6M"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        document.getElementById("user-info").innerText = `Olá, ${user.displayName}!`;
+      } else {
+        window.location.href = "index.html"; // redireciona se não estiver logado
+      }
+    });
+
+    window.logout = function () {
+      signOut(auth).then(() => {
+        alert("Você saiu com sucesso!");
+        window.location.href = "index.html";
+      });
+    };
+  </script>
+</body>
+</html>
