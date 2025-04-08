@@ -1,92 +1,48 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <title>SaveMoney - Página Inicial</title>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js" type="module"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js" type="module"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f1f1f1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SaveMoney - Painel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen font-sans">
+    <!-- Header -->
+    <header class="bg-purple-600 text-white p-4 shadow-md flex justify-between items-center">
+      <h1 class="text-2xl font-bold">💰 SaveMoney</h1>
+      <button onclick="logout()" class="bg-white text-purple-600 px-4 py-1 rounded hover:bg-gray-100 font-semibold">Sair</button>
+    </header>
 
-    .container {
-      background: white;
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      text-align: center;
-    }
+    <!-- Conteúdo principal -->
+    <main class="p-6">
+      <h2 class="text-xl font-semibold mb-4 text-gray-800">Resumo Financeiro</h2>
 
-    h1 {
-      margin-bottom: 10px;
-    }
+      <!-- Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white p-6 rounded-2xl shadow">
+          <h3 class="text-gray-500">Receitas</h3>
+          <p class="text-2xl text-green-500 font-bold">R$ 4.200,00</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow">
+          <h3 class="text-gray-500">Despesas</h3>
+          <p class="text-2xl text-red-500 font-bold">R$ 2.750,00</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow">
+          <h3 class="text-gray-500">Balanço</h3>
+          <p class="text-2xl text-blue-500 font-bold">R$ 1.450,00</p>
+        </div>
+      </div>
 
-    #user-info {
-      margin: 20px 0;
-      font-size: 18px;
-    }
+      <!-- Botão adicionar -->
+      <div class="mt-6 text-center">
+        <button class="bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700 transition">+ Adicionar Transação</button>
+      </div>
+    </main>
 
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #ff4d4d;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #e60000;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Bem-vindo ao SaveMoney</h1>
-    <div id="user-info">Carregando informações do usuário...</div>
-    <button onclick="logout()">Sair</button>
-  </div>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCmw9A3WvecBRr19MhIX5-wKLf66r-voig",
-      authDomain: "savemoney-7b401.firebaseapp.com",
-      projectId: "savemoney-7b401",
-      storageBucket: "savemoney-7b401.firebasestorage.app",
-      messagingSenderId: "1036605042056",
-      appId: "1:1036605042056:web:1d5ee679915dba328c5e3d",
-      measurementId: "G-LX8LY8FF6M"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById("user-info").innerText = `Olá, ${user.displayName}!`;
-      } else {
-        window.location.href = "index.html"; // redireciona se não estiver logado
+    <script>
+      function logout() {
+        alert("Logout ainda não implementado.");
+        // Aqui futuramente você pode colocar: firebase.auth().signOut()...
       }
-    });
-
-    window.logout = function () {
-      signOut(auth).then(() => {
-        alert("Você saiu com sucesso!");
-        window.location.href = "index.html";
-      });
-    };
-  </script>
-</body>
+    </script>
+  </body>
 </html>
