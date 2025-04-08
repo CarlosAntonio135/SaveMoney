@@ -6,15 +6,15 @@
   <title>SaveMoney - Login com Google</title>
 
   <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js" type="module"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js" type="module"></script>
 
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
       padding-top: 100px;
-      background-color: #f1f1f1;
+      background-color: #f9f9f9;
     }
 
     h1 {
@@ -32,21 +32,25 @@
   <h1>Login no SaveMoney</h1>
   <button onclick="loginComGoogle()">Entrar com Google</button>
 
-  <!-- Firebase login config -->
+  <!-- Firebase login script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js";
 
     const firebaseConfig = {
-      apiKey: "SUA_API_KEY",
-      authDomain: "SEU_DOMINIO.firebaseapp.com",
-      projectId: "SEU_PROJECT_ID",
-      storageBucket: "SEU_BUCKET.appspot.com",
-      messagingSenderId: "SEU_SENDER_ID",
-      appId: "SUA_APP_ID"
+      apiKey: "AIzaSyCmw9A3WvecBRr19MhIX5-wKLf66r-voig",
+      authDomain: "savemoney-7b401.firebaseapp.com",
+      projectId: "savemoney-7b401",
+      storageBucket: "savemoney-7b401.firebasestorage.app",
+      messagingSenderId: "1036605042056",
+      appId: "1:1036605042056:web:1d5ee679915dba328c5e3d",
+      measurementId: "G-LX8LY8FF6M"
     };
 
     const app = initializeApp(firebaseConfig);
+    getAnalytics(app);
+
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
@@ -54,12 +58,12 @@
       signInWithPopup(auth, provider)
         .then((result) => {
           const user = result.user;
-          console.log("Usuário logado:", user.displayName);
-          alert(`Bem-vindo(a), ${user.displayName}`);
+          alert(`Bem-vindo, ${user.displayName}!`);
+          console.log(user);
           window.location.href = "home.html"; // redireciona após login
         })
         .catch((error) => {
-          console.error("Erro no login:", error);
+          console.error(error);
           alert("Erro ao fazer login com o Google.");
         });
     };
