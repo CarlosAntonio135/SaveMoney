@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SaveMoney</title>
+  <title>SaveMoney - Dashboard</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -20,29 +20,29 @@
       <h2>Perfil do Usuário</h2>
       <p><strong>Nome:</strong> <span id="userName">Carregando...</span></p>
       <p><strong>Email:</strong> <span id="userEmail">Carregando...</span></p>
-      <button id="logoutBtn">Sair da conta</button>
+      <button id="logoutBtn">Sair</button>
     </div>
   </div>
 
+  <!-- Conteúdo principal -->
   <div class="container">
     <img src="logo.png" alt="SaveMoney Logo" class="logo" />
 
     <div class="formulario">
       <input type="text" id="descricao" placeholder="Descrição" />
       <input type="number" id="valor" placeholder="Valor" />
+      <input type="date" id="data" />
       <select id="tipo">
         <option value="entrada">Entrada</option>
         <option value="saida">Saída</option>
       </select>
-      <input type="date" id="data" />
-      <button id="adicionarBtn">Adicionar</button>
+      <button id="adicionarBtn">Adicionar Transação</button>
     </div>
 
     <div class="resumo">
-      <h3>Resumo</h3>
-      <p>Total de Entradas: <span id="totalEntradas">R$ 0.00</span></p>
-      <p>Total de Saídas: <span id="totalSaidas">R$ 0.00</span></p>
-      <p>Saldo Final: <span id="saldoFinal">R$ 0.00</span></p>
+      <p><strong>Total de Entradas:</strong> <span id="totalEntradas">R$ 0,00</span></p>
+      <p><strong>Total de Saídas:</strong> <span id="totalSaidas">R$ 0,00</span></p>
+      <p><strong>Saldo Final:</strong> <span id="saldoFinal">R$ 0,00</span></p>
     </div>
 
     <canvas id="grafico" width="400" height="400"></canvas>
