@@ -81,3 +81,27 @@ function updateBalance() {
   const total = transactions.reduce((acc, t) => acc + t.amount, 0);
   balanceDisplay.textContent = `Saldo: R$ ${total.toFixed(2)}`;
 }
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+// Configuração do Firebase (copie a mesma usada no login)
+const firebaseConfig = {
+  apiKey: "AIzaSyCmw9A3WvecBRr19MhIX5-wKLf66r-voig",
+  authDomain: "savemoney-7b401.firebaseapp.com",
+  projectId: "savemoney-7b401",
+  storageBucket: "savemoney-7b401.appspot.com",
+  messagingSenderId: "1036605042056",
+  appId: "1:1036605042056:web:1d5ee679915dba328c5e3d",
+  measurementId: "G-LX8LY8FF6M"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// Verifica se o usuário está autenticado
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    // Se não estiver logado, redireciona para login
+    window.location.href = "login.html";
+  }
+});
