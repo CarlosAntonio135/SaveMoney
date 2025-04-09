@@ -1,5 +1,11 @@
-
 let transacoes = [];
+
+// Recupera transações salvas no localStorage
+const transacoesSalvas = JSON.parse(localStorage.getItem("transacoes"));
+if (transacoesSalvas) {
+  transacoes = transacoesSalvas;
+  atualizarInterface();
+}
 
 function adicionarTransacao() {
   const descricao = document.getElementById("descricao").value;
@@ -7,9 +13,16 @@ function adicionarTransacao() {
   const tipo = document.getElementById("tipo").value;
   const data = document.getElementById("data").value;
 
-  if (!descricao || isNaN(valor) || !data) return;
+  if (!descricao || isNaN(valor) || !data) {
+    alert("Preencha todos os campos corretamente.");
+    return;
+  }
 
   transacoes.push({ descricao, valor, tipo, data });
+
+  // Salva no localStorage
+  localStorage.setItem("transacoes", JSON.stringify(transacoes));
+
   atualizarInterface();
   limparCampos();
 }
@@ -21,9 +34,15 @@ function atualizarInterface() {
   let totalEntradas = 0;
   let totalSaidas = 0;
 
-  transacoes.forEach((t) => {
+  transacoes.forEach((t, index) => {
     const item = document.createElement("div");
     item.innerHTML = `${t.descricao} - R$ ${t.valor.toFixed(2)} - ${t.tipo} - ${t.data}`;
+    
+    const btn = document.createElement("button");
+    btn.textContent = "Remover";
+    btn.onclick = () => removerTransacao(index);
+    item.appendChild(btn);
+
     lista.appendChild(item);
 
     if (t.tipo === "entrada") totalEntradas += t.valor;
@@ -35,6 +54,12 @@ function atualizarInterface() {
   document.getElementById("saldoFinal").innerText = `R$ ${(totalEntradas - totalSaidas).toFixed(2)}`;
 
   atualizarGrafico(totalEntradas, totalSaidas);
+}
+
+function removerTransacao(index) {
+  transacoes.splice(index, 1);
+  localStorage.setItem("transacoes", JSON.stringify(transacoes));
+  atualizarInterface();
 }
 
 function limparCampos() {
@@ -65,6 +90,10 @@ function atualizarGrafico(entrada, saida) {
           labels: {
             color: '#fff'
           }
+        },
+        tooltip: {
+          bodyColor: '#fff',
+          titleColor: '#ffcc00'
         }
       }
     }
@@ -78,7 +107,7 @@ function exportarPDF() {
 
   transacoes.forEach((t, i) => {
     const y = 30 + i * 10;
-    doc.text(`${t.descricao} | ${t.tipo} | R$ ${t.valor} | ${t.data}`, 20, y);
+    doc.text(`${t.descricao} | ${t.tipo} | R$ ${t.valor.toFixed(2)} | ${t.data}`, 20, y);
   });
 
   doc.save("relatorio-financeiro.pdf");
