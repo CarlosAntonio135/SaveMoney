@@ -33,7 +33,7 @@ loginForm.addEventListener("submit", (e) => {
 
   signInWithEmailAndPassword(auth, email, senha)
     .then(() => {
-      window.location.href = "painel.html"; // ou "index.html" se for o nome do painel
+      window.location.href = "index.html"; // ou "index.html" se for o nome do painel
     })
     .catch((error) => {
       errorMessage.textContent = "Erro: " + error.message;
