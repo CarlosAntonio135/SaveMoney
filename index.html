@@ -1,42 +1,22 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <title>SaveMoney - Login com Google</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-    <script src="firebase-config.js"></script>
-
-    <!-- Tailwind CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SaveMoney - Login</title>
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="firebase.js"></script>
   </head>
-  <body class="bg-gray-100 h-screen flex items-center justify-center">
-    <div class="bg-white shadow-lg rounded-2xl p-10 w-full max-w-md text-center">
-      <h1 class="text-3xl font-bold mb-6 text-gray-800">Login no <span class="text-purple-600">SaveMoney</span></h1>
-      <button
-        onclick="loginWithGoogle()"
-        class="bg-white text-gray-700 border border-gray-300 hover:border-purple-500 hover:text-purple-600 font-semibold py-2 px-6 rounded-full shadow-sm transition duration-200 flex items-center justify-center mx-auto"
-      >
-        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5 mr-2" />
-        Entrar com Google
-      </button>
+  <body class="dark-mode">
+    <div class="login-container">
+      <img src="logo-savemoney.png" alt="SaveMoney" class="logo" />
+      <h1>Entrar no SaveMoney</h1>
+      <input type="email" id="email" placeholder="Email" />
+      <input type="password" id="password" placeholder="Senha" />
+      <button id="login">Login</button>
+      <button id="google-login">Entrar com Google</button>
+      <p>Não tem conta? <a href="register.html">Cadastre-se</a></p>
     </div>
-
-    <script>
-      const auth = firebase.auth();
-      const provider = new firebase.auth.GoogleAuthProvider();
-
-      function loginWithGoogle() {
-        auth.signInWithPopup(provider)
-          .then((result) => {
-            // Usuário logado com sucesso
-            window.location.href = "home.html"; // redireciona após login
-          })
-          .catch((error) => {
-            alert("Erro ao fazer login com o Google.\n" + error.message);
-            console.error(error);
-          });
-      }
-    </script>
+    <script type="module" src="login.js"></script>
   </body>
 </html>
