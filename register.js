@@ -30,7 +30,7 @@ registerForm.addEventListener("submit", (e) => {
   createUserWithEmailAndPassword(auth, email, senha)
     .then(() => {
       // Após o registro, redireciona para o painel
-      window.location.href = "painel.html";
+      window.location.href = "login.html";
     })
     .catch((error) => {
       errorMessage.textContent = "Erro: " + error.message;
