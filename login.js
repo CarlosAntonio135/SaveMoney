@@ -55,3 +55,19 @@ if (googleBtn) {
       });
   });
 }
+signInWithEmailAndPassword(auth, email, senha)
+  .then((userCredential) => {
+    const user = userCredential.user;
+    
+    // 🔐 Salva no localStorage para manter logado
+    localStorage.setItem("usuarioLogado", JSON.stringify({
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName
+    }));
+
+    window.location.href = "index.html";
+  })
+  .catch((error) => {
+    alert("Erro ao fazer login: " + error.message);
+  });
