@@ -75,6 +75,7 @@ function atualizarInterface() {
 
   transacoes.forEach((t) => {
     const item = document.createElement("div");
+    item.classList.add("transacao-item");
     item.innerHTML = `${t.descricao} - R$ ${t.valor.toFixed(2)} - ${t.tipo} - ${t.data}`;
     lista.appendChild(item);
 
@@ -125,14 +126,18 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
 });
 
 document.getElementById("perfilBtn").addEventListener("click", () => {
-  const dropdown = document.getElementById("perfilDropdown");
-  dropdown.classList.toggle("show");
+  const modal = document.getElementById("perfilModal");
+  modal.style.display = "block";
+});
+
+document.getElementById("fecharModal").addEventListener("click", () => {
+  document.getElementById("perfilModal").style.display = "none";
 });
 
 document.addEventListener("click", function (event) {
-  const dropdown = document.getElementById("perfilDropdown");
+  const modal = document.getElementById("perfilModal");
   const perfilBtn = document.getElementById("perfilBtn");
-  if (!perfilBtn.contains(event.target)) {
-    dropdown.classList.remove("show");
+  if (!perfilBtn.contains(event.target) && !modal.contains(event.target)) {
+    modal.style.display = "none";
   }
 });
