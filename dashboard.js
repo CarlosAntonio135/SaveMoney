@@ -1,66 +1,67 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+// dashboard.js
+import { auth, db } from "./firebaseConfig.js";
 import {
-  getAuth,
+  onAuthStateChanged,
   signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Firebase Config
-const firebaseConfig = {
-  apiKey: "AIzaSyCmw9A3WvecBRr19MhIX5-wKLf66r-voig",
-  authDomain: "savemoney-7b401.firebaseapp.com",
-  projectId: "savemoney-7b401",
-  storageBucket: "savemoney-7b401.appspot.com",
-  messagingSenderId: "1036605042056",
-  appId: "1:1036605042056:web:1d5ee679915dba328c5e3d",
-  measurementId: "G-LX8LY8FF6M"
-};
+let transacoes = [];
+let currentUser = null;
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-// Verifica se o usuário está autenticado
-onAuthStateChanged(auth, (user) => {
-  if (!user) {
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+    document.getElementById("userName").innerText = user.displayName || user.email;
+    document.getElementById("userEmail").innerText = user.email;
+    carregarTransacoes();
+  } else {
     window.location.href = "login.html";
   }
 });
 
-// Botão de Perfil
-document.getElementById("btnPerfil").addEventListener("click", () => {
-  const user = auth.currentUser;
-  if (user) {
-    document.getElementById("perfilNome").innerText = user.displayName || "Não informado";
-    document.getElementById("perfilEmail").innerText = user.email || "Não informado";
-    document.getElementById("perfilProvedor").innerText =
-      user.providerData[0].providerId === "password" ? "Email/Senha" : "Google";
-    document.getElementById("perfilModal").style.display = "flex";
-  }
-});
+async function carregarTransacoes() {
+  if (!currentUser) return;
 
-// Logout
-document.getElementById("logout").addEventListener("click", () => {
-  signOut(auth)
-    .then(() => {
-      window.location.href = "login.html";
-    })
-    .catch((error) => {
-      alert("Erro ao sair: " + error.message);
-    });
-});
+  const q = query(
+    collection(db, "transacoes"),
+    where("uid", "==", currentUser.uid)
+  );
 
-// Transações
-let transacoes = [];
+  const querySnapshot = await getDocs(q);
+  transacoes = [];
+  querySnapshot.forEach((doc) => {
+    transacoes.push(doc.data());
+  });
+  atualizarInterface();
+}
 
-function adicionarTransacao() {
+document.getElementById("adicionarBtn").addEventListener("click", adicionarTransacao);
+
+async function adicionarTransacao() {
   const descricao = document.getElementById("descricao").value;
   const valor = parseFloat(document.getElementById("valor").value);
   const tipo = document.getElementById("tipo").value;
   const data = document.getElementById("data").value;
 
-  if (!descricao || isNaN(valor) || !data) return;
+  if (!descricao || isNaN(valor) || !data || !currentUser) return;
 
-  transacoes.push({ descricao, valor, tipo, data });
+  const novaTransacao = {
+    descricao,
+    valor,
+    tipo,
+    data,
+    uid: currentUser.uid,
+  };
+
+  await addDoc(collection(db, "transacoes"), novaTransacao);
+  transacoes.push(novaTransacao);
   atualizarInterface();
   limparCampos();
 }
@@ -84,7 +85,6 @@ function atualizarInterface() {
   document.getElementById("totalEntradas").innerText = `R$ ${totalEntradas.toFixed(2)}`;
   document.getElementById("totalSaidas").innerText = `R$ ${totalSaidas.toFixed(2)}`;
   document.getElementById("saldoFinal").innerText = `R$ ${(totalEntradas - totalSaidas).toFixed(2)}`;
-
   atualizarGrafico(totalEntradas, totalSaidas);
 }
 
@@ -97,7 +97,6 @@ function limparCampos() {
 let grafico;
 function atualizarGrafico(entrada, saida) {
   const ctx = document.getElementById('grafico').getContext('2d');
-
   if (grafico) grafico.destroy();
 
   grafico = new Chart(ctx, {
@@ -113,50 +112,27 @@ function atualizarGrafico(entrada, saida) {
     options: {
       plugins: {
         legend: {
-          labels: {
-            color: '#fff'
-          }
+          labels: { color: '#fff' }
         }
       }
     }
   });
 }
 
-function exportarPDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  doc.text("Relatório Financeiro - SaveMoney", 20, 20);
-
-  transacoes.forEach((t, i) => {
-    const y = 30 + i * 10;
-    doc.text(`${t.descricao} | ${t.tipo} | R$ ${t.valor} | ${t.data}`, 20, y);
-  });
-
-  doc.save("relatorio-financeiro.pdf");
-}
-
-function exportarExcel() {
-  const worksheet = XLSX.utils.json_to_sheet(transacoes);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Transações");
-  XLSX.writeFile(workbook, "relatorio-financeiro.xlsx");
-}
-document.getElementById('btnPerfil').addEventListener('click', () => {
-  const dropdown = document.getElementById('perfilDropdown');
-  dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await signOut(auth);
+  window.location.href = "login.html";
 });
 
-// Exibe nome e e-mail do usuário logado
-firebase.auth().onAuthStateChanged(user => {
-  if (user) {
-    document.getElementById('perfilNome').innerText = user.displayName || "Usuário";
-    document.getElementById('perfilEmail').innerText = user.email;
+document.getElementById("perfilBtn").addEventListener("click", () => {
+  const dropdown = document.getElementById("perfilDropdown");
+  dropdown.classList.toggle("show");
+});
+
+document.addEventListener("click", function (event) {
+  const dropdown = document.getElementById("perfilDropdown");
+  const perfilBtn = document.getElementById("perfilBtn");
+  if (!perfilBtn.contains(event.target)) {
+    dropdown.classList.remove("show");
   }
-});
-
-// Logout
-document.getElementById('logoutBtn').addEventListener('click', () => {
-  firebase.auth().signOut().then(() => {
-    window.location.href = "login.html";
-  });
 });
