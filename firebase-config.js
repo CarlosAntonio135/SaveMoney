@@ -1,21 +1,30 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyCmw9A3WvecBRr19MhIX5-wKLf66r-voig",
-  authDomain: "savemoney-7b401.firebaseapp.com",
-  projectId: "savemoney-7b401",
-  storageBucket: "savemoney-7b401.firebasestorage.app",
-  messagingSenderId: "1036605042056",
-  appId: "1:1036605042056:web:1d5ee679915dba328c5e3d",
-  measurementId: "G-LX8LY8FF6M"
+  apiKey: "SUA_API_KEY",
+  authDomain: "SEU_DOMINIO.firebaseapp.com",
+  projectId: "SEU_PROJECT_ID",
+  storageBucket: "SEU_BUCKET.appspot.com",
+  messagingSenderId: "SEU_SENDER_ID",
+  appId: "SUA_APP_ID"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+function loginComGoogle() {
+  signInWithPopup(auth, provider)
+    .then((result) => {
+      const user = result.user;
+      console.log("Usuário logado:", user.displayName);
+      alert(`Bem-vindo(a), ${user.displayName}`);
+      window.location.href = "home.html"; // redirecionar após login
+    })
+    .catch((error) => {
+      console.error("Erro no login:", error);
+    });
+}
+
+window.loginComGoogle = loginComGoogle;
