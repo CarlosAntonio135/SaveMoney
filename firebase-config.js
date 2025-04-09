@@ -1,4 +1,3 @@
-// firebase-auth.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 import {
   getAuth,
@@ -8,7 +7,6 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
-// Configuração do Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyCmw9A3WvecBRr19MhIX5-wKLf66r-voig",
   authDomain: "savemoney-7b401.firebaseapp.com",
@@ -19,12 +17,10 @@ const firebaseConfig = {
   measurementId: "G-LX8LY8FF6M"
 };
 
-// Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-// Login com email e senha
 const loginForm = document.getElementById("loginForm");
 const errorMessage = document.getElementById("errorMessage");
 
@@ -44,7 +40,6 @@ if (loginForm) {
   });
 }
 
-// Login com Google
 const googleLogin = document.getElementById("googleLogin");
 
 if (googleLogin) {
@@ -59,7 +54,6 @@ if (googleLogin) {
   });
 }
 
-// Redirecionar se já estiver logado
 onAuthStateChanged(auth, (user) => {
   if (user && window.location.pathname.includes("login.html")) {
     window.location.href = "dashboard.html";
