@@ -47,7 +47,7 @@ if (googleBtn) {
   googleBtn.addEventListener("click", () => {
     signInWithPopup(auth, provider)
       .then(() => {
-        window.location.href = "painel.html"; // ou "index.html"
+        window.location.href = "index.html"; // ou "index.html"
       })
       .catch((error) => {
         errorMessage.textContent = "Erro: " + error.message;
