@@ -1,41 +1,83 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SaveMoney - Painel</title>
-    <link rel="stylesheet" href="style.css" />
-    <script type="module" src="firebase.js"></script>
-  </head>
-  <body class="dark-mode">
-    <header>
-      <img src="logo-savemoney.png" alt="SaveMoney" class="logo-small" />
-      <h1>Dashboard</h1>
-      <button id="logout">Sair</button>
-    </header>
+import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import { app } from "./firebase-config.js";
 
-    <main>
-      <section class="summary">
-        <h2>Resumo Financeiro</h2>
-        <p id="balance">Saldo: R$ 0,00</p>
-      </section>
+const auth = getAuth(app);
 
-      <section class="transactions">
-        <h2>Transações</h2>
-        <ul id="transaction-list"></ul>
-      </section>
+// Protege a página: redireciona se não estiver logado
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "index.html"; // ou login.html
+  }
+});
 
-      <section class="actions">
-        <input type="text" id="description" placeholder="Descrição" />
-        <input type="number" id="amount" placeholder="Valor" />
-        <select id="type">
-          <option value="income">Receita</option>
-          <option value="expense">Despesa</option>
-        </select>
-        <button id="add-transaction">Adicionar</button>
-      </section>
-    </main>
+// Botão de logout
+document.getElementById("logout").addEventListener("click", () => {
+  signOut(auth)
+    .then(() => {
+      window.location.href = "index.html"; // ou login.html
+    })
+    .catch((error) => {
+      alert("Erro ao sair: " + error.message);
+    });
+});
 
-    <script type="module" src="dashboard.js"></script>
-  </body>
-</html>
+// Transações armazenadas em memória
+let transactions = [];
+
+// Elementos da DOM
+const descriptionInput = document.getElementById("description");
+const amountInput = document.getElementById("amount");
+const typeSelect = document.getElementById("type");
+const transactionList = document.getElementById("transaction-list");
+const balanceDisplay = document.getElementById("balance");
+
+document.getElementById("add-transaction").addEventListener("click", () => {
+  const description = descriptionInput.value.trim();
+  const amount = parseFloat(amountInput.value);
+  const type = typeSelect.value;
+
+  if (description === "" || isNaN(amount)) {
+    alert("Preencha todos os campos corretamente.");
+    return;
+  }
+
+  const transaction = {
+    description,
+    amount: type === "expense" ? -amount : amount,
+    type,
+  };
+
+  transactions.push(transaction);
+  renderTransactions();
+  updateBalance();
+
+  // Limpar inputs
+  descriptionInput.value = "";
+  amountInput.value = "";
+});
+
+function renderTransactions() {
+  transactionList.innerHTML = "";
+
+  transactions.forEach((t, index) => {
+    const li = document.createElement("li");
+    li.textContent = `${t.description} - R$ ${t.amount.toFixed(2)}`;
+    li.className = t.amount < 0 ? "expense" : "income";
+
+    const removeBtn = document.createElement("button");
+    removeBtn.textContent = "Remover";
+    removeBtn.onclick = () => {
+      transactions.splice(index, 1);
+      renderTransactions();
+      updateBalance();
+    };
+
+    li.appendChild(removeBtn);
+    transactionList.appendChild(li);
+  });
+}
+
+function updateBalance() {
+  const total = transactions.reduce((acc, t) => acc + t.amount, 0);
+  balanceDisplay.textContent = `Saldo: R$ ${total.toFixed(2)}`;
+}
