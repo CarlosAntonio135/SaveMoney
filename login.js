@@ -55,3 +55,12 @@ if (googleBtn) {
       });
   });
 }
+function loginUsuario(email, senha) {
+  // Supondo que você valide o login aqui
+  if (email === "teste@email.com" && senha === "123456") {
+    // Redireciona para a página principal
+    window.location.href = "index.html";
+  } else {
+    alert("Email ou senha incorretos!");
+  }
+}
