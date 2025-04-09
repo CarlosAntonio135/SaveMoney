@@ -3,24 +3,28 @@ import { app } from "./firebase-config.js";
 
 const auth = getAuth(app);
 
+// Verifica se o usuário está logado
 onAuthStateChanged(auth, (user) => {
   if (!user) {
-    window.location.href = "index.html"; // ou login.html
+    window.location.href = "index.html"; // Redireciona se não estiver logado
   }
 });
 
+// Logout
 document.getElementById("logout").addEventListener("click", () => {
   signOut(auth)
     .then(() => {
-      window.location.href = "index.html"; // ou login.html
+      window.location.href = "index.html";
     })
     .catch((error) => {
       alert("Erro ao sair: " + error.message);
     });
 });
 
+// Transações em memória
 let transactions = [];
 
+// Elementos
 const descriptionInput = document.getElementById("description");
 const amountInput = document.getElementById("amount");
 const typeSelect = document.getElementById("type");
@@ -47,7 +51,7 @@ document.getElementById("add-transaction").addEventListener("click", () => {
   renderTransactions();
   updateBalance();
 
-  
+  // Limpa os campos
   descriptionInput.value = "";
   amountInput.value = "";
 });
