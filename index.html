@@ -8,22 +8,23 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script type="module" src="script.js" defer></script>
 </head>
 <body>
   <!-- Botão de perfil -->
-<button id="btnPerfil" style="position: fixed; top: 10px; right: 10px;">👤 Perfil</button>
+  <button id="btnPerfil" style="position: fixed; top: 10px; right: 10px;">👤 Perfil</button>
 
-<!-- Modal do Perfil -->
-<div id="perfilModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.8); justify-content:center; align-items:center;">
-  <div style="background:#fff; padding:2rem; border-radius:10px; max-width:400px; width:100%; color:#000; position:relative;">
-    <h2>Perfil do Usuário</h2>
-    <p><strong>Nome:</strong> <span id="perfilNome">Carregando...</span></p>
-    <p><strong>Email:</strong> <span id="perfilEmail">Carregando...</span></p>
-    <p><strong>Login via:</strong> <span id="perfilProvedor">Carregando...</span></p>
-    <button id="logout" style="margin-top: 20px;">Logout</button>
-    <button onclick="document.getElementById('perfilModal').style.display='none'" style="position:absolute; top:10px; right:10px;">✖</button>
+  <!-- Modal do Perfil -->
+  <div id="perfilModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.7); justify-content:center; align-items:center;">
+    <div style="background:#fff; padding:2rem; border-radius:10px; max-width:400px; width:100%; color:#000; position:relative;">
+      <h2>Perfil do Usuário</h2>
+      <p><strong>Nome:</strong> <span id="perfilNome">Carregando...</span></p>
+      <p><strong>Email:</strong> <span id="perfilEmail">Carregando...</span></p>
+      <p><strong>Login via:</strong> <span id="perfilProvedor">Carregando...</span></p>
+      <button id="logout" style="margin-top: 20px;">Logout</button>
+      <button onclick="document.getElementById('perfilModal').style.display='none'" style="position:absolute; top:10px; right:10px;">✖</button>
+    </div>
   </div>
-</div>
 
   <div class="container">
     <img src="logo-savemoney.png" alt="SaveMoney Logo" class="logo" />
@@ -53,33 +54,5 @@
 
     <div id="listaTransacoes"></div>
   </div>
-
-  <!-- Firebase Auth check -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCmw9A3WvecBRr19MhIX5-wKLf66r-voig",
-      authDomain: "savemoney-7b401.firebaseapp.com",
-      projectId: "savemoney-7b401",
-      storageBucket: "savemoney-7b401.appspot.com",
-      messagingSenderId: "1036605042056",
-      appId: "1:1036605042056:web:1d5ee679915dba328c5e3d",
-      measurementId: "G-LX8LY8FF6M"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        // Redireciona para login se não estiver logado
-        window.location.href = "login.html";
-      }
-    });
-  </script>
-
-  <script src="script.js"></script>
 </body>
 </html>
