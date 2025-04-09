@@ -11,7 +11,17 @@
   <script type="module" src="script.js" defer></script>
 </head>
 <body>
-  <!-- Botão de perfil -->
+  <div class="perfil-container">
+  <button class="avatar-btn" id="btnPerfil">
+    <img src="https://img.icons8.com/ios-filled/24/000000/user.png" alt="Perfil" />
+  </button>
+  <div class="perfil-dropdown" id="perfilDropdown">
+    <p id="perfilNome">Nome do Usuário</p>
+    <p id="perfilEmail">email@exemplo.com</p>
+    <button id="logoutBtn">Sair</button>
+  </div>
+</div>
+
   <button id="btnPerfil" style="
   position: fixed;
   top: 15px;
