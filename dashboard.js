@@ -1,135 +1,149 @@
-import { auth, db } from "./firebaseConfig.js";
-import {
-  onAuthStateChanged,
-  signOut,
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import {
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  where,
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-let transacoes = [];
-let currentUser = null;
-
-// Autenticação do usuário
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    currentUser = user;
-    document.getElementById("userName").innerText = user.displayName || user.email;
-    document.getElementById("userEmail").innerText = user.email;
-    carregarTransacoes();
-  } else {
+document.addEventListener("DOMContentLoaded", () => {
+  // Verifica se o usuário está logado
+  const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+  if (!usuarioLogado) {
     window.location.href = "login.html";
+    return;
   }
-});
 
-// Carregar transações do Firestore
-async function carregarTransacoes() {
-  if (!currentUser) return;
+  // Preencher dados do perfil
+  document.getElementById("userName").textContent = usuarioLogado.nome || "Usuário";
+  document.getElementById("userEmail").textContent = usuarioLogado.email || "Email";
 
-  const q = query(collection(db, "transacoes"), where("uid", "==", currentUser.uid));
-  const querySnapshot = await getDocs(q);
+  // Modal de perfil
+  const perfilBtn = document.getElementById("perfilBtn");
+  const perfilModal = document.getElementById("perfilModal");
+  const fecharModal = document.getElementById("fecharModal");
+  const logoutBtn = document.getElementById("logoutBtn");
 
-  transacoes = [];
-  querySnapshot.forEach((doc) => {
-    transacoes.push(doc.data());
+  perfilBtn.addEventListener("click", () => {
+    perfilModal.style.display = "block";
   });
 
-  atualizarInterface();
-}
+  fecharModal.addEventListener("click", () => {
+    perfilModal.style.display = "none";
+  });
 
-// Adicionar nova transação
-document.getElementById("adicionarBtn").addEventListener("click", adicionarTransacao);
+  window.addEventListener("click", (e) => {
+    if (e.target === perfilModal) {
+      perfilModal.style.display = "none";
+    }
+  });
 
-async function adicionarTransacao() {
-  const descricao = document.getElementById("descricao").value;
-  const valor = parseFloat(document.getElementById("valor").value);
-  const tipo = document.getElementById("tipo").value;
-  const data = document.getElementById("data").value;
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("usuarioLogado");
+    window.location.href = "login.html";
+  });
 
-  if (!descricao || isNaN(valor) || !data || !currentUser) return;
+  // Funções de transações
+  const listaTransacoes = document.getElementById("listaTransacoes");
+  const totalEntradas = document.getElementById("totalEntradas");
+  const totalSaidas = document.getElementById("totalSaidas");
+  const saldoFinal = document.getElementById("saldoFinal");
 
-  const novaTransacao = {
-    descricao,
-    valor,
-    tipo,
-    data,
-    uid: currentUser.uid,
+  let transacoes = JSON.parse(localStorage.getItem(`transacoes_${usuarioLogado.email}`)) || [];
+
+  function salvarTransacoes() {
+    localStorage.setItem(`transacoes_${usuarioLogado.email}`, JSON.stringify(transacoes));
+  }
+
+  function atualizarResumo() {
+    let entradas = 0, saidas = 0;
+
+    transacoes.forEach(t => {
+      if (t.tipo === "entrada") {
+        entradas += t.valor;
+      } else {
+        saidas += t.valor;
+      }
+    });
+
+    totalEntradas.textContent = `R$ ${entradas.toFixed(2)}`;
+    totalSaidas.textContent = `R$ ${saidas.toFixed(2)}`;
+    saldoFinal.textContent = `R$ ${(entradas - saidas).toFixed(2)}`;
+  }
+
+  function renderizarTransacoes() {
+    listaTransacoes.innerHTML = "";
+    transacoes.forEach((t, i) => {
+      const div = document.createElement("div");
+      div.textContent = `${t.data} - ${t.tipo} - ${t.descricao}: R$ ${t.valor.toFixed(2)}`;
+      listaTransacoes.appendChild(div);
+    });
+    atualizarResumo();
+    atualizarGrafico();
+  }
+
+  window.adicionarTransacao = () => {
+    const descricao = document.getElementById("descricao").value;
+    const valor = parseFloat(document.getElementById("valor").value);
+    const tipo = document.getElementById("tipo").value;
+    const data = document.getElementById("data").value;
+
+    if (!descricao || isNaN(valor) || !data) {
+      alert("Preencha todos os campos!");
+      return;
+    }
+
+    transacoes.push({ descricao, valor, tipo, data });
+    salvarTransacoes();
+    renderizarTransacoes();
+
+    // Limpar inputs
+    document.getElementById("descricao").value = "";
+    document.getElementById("valor").value = "";
+    document.getElementById("data").value = "";
   };
 
-  await addDoc(collection(db, "transacoes"), novaTransacao);
-  transacoes.push(novaTransacao);
-  atualizarInterface();
-  limparCampos();
-}
+  // Exportar PDF
+  window.exportarPDF = () => {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.text("Relatório Financeiro", 10, 10);
+    transacoes.forEach((t, i) => {
+      doc.text(`${t.data} - ${t.tipo} - ${t.descricao}: R$ ${t.valor.toFixed(2)}`, 10, 20 + i * 10);
+    });
+    doc.save("relatorio.pdf");
+  };
 
-// Atualizar a interface com as transações
-function atualizarInterface() {
-  const lista = document.getElementById("listaTransacoes");
-  lista.innerHTML = "";
+  // Exportar Excel
+  window.exportarExcel = () => {
+    const wb = XLSX.utils.book_new();
+    const ws_data = [["Data", "Tipo", "Descrição", "Valor"]];
+    transacoes.forEach(t => {
+      ws_data.push([t.data, t.tipo, t.descricao, t.valor]);
+    });
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    XLSX.utils.book_append_sheet(wb, ws, "Transações");
+    XLSX.writeFile(wb, "relatorio.xlsx");
+  };
 
-  let totalEntradas = 0;
-  let totalSaidas = 0;
+  // Gráfico
+  let grafico;
+  function atualizarGrafico() {
+    const ctx = document.getElementById("grafico").getContext("2d");
+    const entradas = transacoes.filter(t => t.tipo === "entrada").reduce((s, t) => s + t.valor, 0);
+    const saidas = transacoes.filter(t => t.tipo === "saida").reduce((s, t) => s + t.valor, 0);
 
-  transacoes.forEach((t) => {
-    const item = document.createElement("div");
-    item.className = "transacao-item";
-    item.innerText = `${t.descricao} - R$ ${t.valor.toFixed(2)} - ${t.tipo} - ${t.data}`;
-    lista.appendChild(item);
-
-    if (t.tipo === "entrada") totalEntradas += t.valor;
-    else totalSaidas += t.valor;
-  });
-
-  document.getElementById("totalEntradas").innerText = `R$ ${totalEntradas.toFixed(2)}`;
-  document.getElementById("totalSaidas").innerText = `R$ ${totalSaidas.toFixed(2)}`;
-  document.getElementById("saldoFinal").innerText = `R$ ${(totalEntradas - totalSaidas).toFixed(2)}`;
-  atualizarGrafico(totalEntradas, totalSaidas);
-}
-
-// Limpar campos do formulário
-function limparCampos() {
-  document.getElementById("descricao").value = "";
-  document.getElementById("valor").value = "";
-  document.getElementById("data").value = "";
-}
-
-// Atualizar gráfico com Chart.js
-let grafico;
-function atualizarGrafico(entrada, saida) {
-  const ctx = document.getElementById("grafico").getContext("2d");
-  if (grafico) grafico.destroy();
-
-  grafico = new Chart(ctx, {
-    type: "doughnut",
-    data: {
-      labels: ["Entradas", "Saídas"],
-      datasets: [{
-        data: [entrada, saida],
-        backgroundColor: ["#00ff88", "#ff4b4b"],
-        borderWidth: 1,
-      }],
-    },
-    options: {
-      plugins: {
-        legend: {
-          labels: { color: "#fff" },
-        },
+    if (grafico) grafico.destroy();
+    grafico = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels: ["Entradas", "Saídas"],
+        datasets: [{
+          data: [entradas, saidas],
+          backgroundColor: ["#4caf50", "#f44336"]
+        }]
       },
-    },
-  });
-}
+      options: {
+        plugins: {
+          legend: {
+            labels: { color: "#fff" }
+          }
+        }
+      }
+    });
+  }
 
-// Logout
-document.getElementById("logoutBtn").addEventListener("click", async () => {
-  await signOut(auth);
-  window.location.href = "login.html";
+  renderizarTransacoes();
 });
-
-// Abrir e fechar o modal de perfil
-window.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("perfilBtn").addEventListener("click", () => {
-    document.getElementById("perfilModal").style.display = "block
