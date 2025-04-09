@@ -1,18 +1,11 @@
-// Firebase e funcionalidades
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc
-} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-import {
   getAuth,
-  onAuthStateChanged,
-  signOut
+  signOut,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
-// Config Firebase
+// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyCmw9A3WvecBRr19MhIX5-wKLf66r-voig",
   authDomain: "savemoney-7b401.firebaseapp.com",
@@ -24,56 +17,56 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 const auth = getAuth(app);
 
-let userId = null;
-let transacoes = [];
-
-onAuthStateChanged(auth, async (user) => {
+// Verifica se o usuário está autenticado
+onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.href = "login.html";
-  } else {
-    userId = user.uid;
-    await carregarTransacoes();
-    atualizarInterface();
+  }
+});
+
+// Botão de Perfil
+document.getElementById("btnPerfil").addEventListener("click", () => {
+  const user = auth.currentUser;
+  if (user) {
+    document.getElementById("perfilNome").innerText = user.displayName || "Não informado";
+    document.getElementById("perfilEmail").innerText = user.email || "Não informado";
+    document.getElementById("perfilProvedor").innerText =
+      user.providerData[0].providerId === "password" ? "Email/Senha" : "Google";
+    document.getElementById("perfilModal").style.display = "flex";
   }
 });
 
 // Logout
-const logoutBtn = document.getElementById("logout");
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    signOut(auth).then(() => window.location.href = "login.html");
-  });
-}
+document.getElementById("logout").addEventListener("click", () => {
+  signOut(auth)
+    .then(() => {
+      window.location.href = "login.html";
+    })
+    .catch((error) => {
+      alert("Erro ao sair: " + error.message);
+    });
+});
 
-// DOM Elements
-const descricaoInput = document.getElementById("descricao");
-const valorInput = document.getElementById("valor");
-const tipoInput = document.getElementById("tipo");
-const dataInput = document.getElementById("data");
-const lista = document.getElementById("listaTransacoes");
+// Transações
+let transacoes = [];
 
-// Botão adicionar
-const botaoAdicionar = document.querySelector("button[onclick='adicionarTransacao()']");
-if (botaoAdicionar) botaoAdicionar.addEventListener("click", adicionarTransacao);
-
-async function adicionarTransacao() {
-  const descricao = descricaoInput.value;
-  const valor = parseFloat(valorInput.value);
-  const tipo = tipoInput.value;
-  const data = dataInput.value;
+function adicionarTransacao() {
+  const descricao = document.getElementById("descricao").value;
+  const valor = parseFloat(document.getElementById("valor").value);
+  const tipo = document.getElementById("tipo").value;
+  const data = document.getElementById("data").value;
 
   if (!descricao || isNaN(valor) || !data) return;
 
   transacoes.push({ descricao, valor, tipo, data });
-  await salvarTransacoes();
   atualizarInterface();
   limparCampos();
 }
 
 function atualizarInterface() {
+  const lista = document.getElementById("listaTransacoes");
   lista.innerHTML = "";
 
   let totalEntradas = 0;
@@ -96,22 +89,25 @@ function atualizarInterface() {
 }
 
 function limparCampos() {
-  descricaoInput.value = "";
-  valorInput.value = "";
-  dataInput.value = "";
+  document.getElementById("descricao").value = "";
+  document.getElementById("valor").value = "";
+  document.getElementById("data").value = "";
 }
 
 let grafico;
 function atualizarGrafico(entrada, saida) {
   const ctx = document.getElementById('grafico').getContext('2d');
+
   if (grafico) grafico.destroy();
+
   grafico = new Chart(ctx, {
     type: 'doughnut',
     data: {
       labels: ['Entradas', 'Saídas'],
       datasets: [{
         data: [entrada, saida],
-        backgroundColor: ['#00ff88', '#ff4b4b']
+        backgroundColor: ['#00ff88', '#ff4b4b'],
+        borderWidth: 1
       }]
     },
     options: {
@@ -126,61 +122,22 @@ function atualizarGrafico(entrada, saida) {
   });
 }
 
-async function salvarTransacoes() {
-  if (!userId) return;
-  const ref = doc(db, "transacoes", userId);
-  await setDoc(ref, { transacoes });
-}
-
-async function carregarTransacoes() {
-  if (!userId) return;
-  const ref = doc(db, "transacoes", userId);
-  const snap = await getDoc(ref);
-  if (snap.exists()) {
-    transacoes = snap.data().transacoes || [];
-  }
-}
-
-// Exporta PDF
 function exportarPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   doc.text("Relatório Financeiro - SaveMoney", 20, 20);
+
   transacoes.forEach((t, i) => {
     const y = 30 + i * 10;
     doc.text(`${t.descricao} | ${t.tipo} | R$ ${t.valor} | ${t.data}`, 20, y);
   });
+
   doc.save("relatorio-financeiro.pdf");
 }
 
-// Exporta Excel
 function exportarExcel() {
   const worksheet = XLSX.utils.json_to_sheet(transacoes);
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, "Transações");
   XLSX.writeFile(workbook, "relatorio-financeiro.xlsx");
 }
-import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-
-// Mostra o perfil
-document.getElementById("btnPerfil").addEventListener("click", () => {
-  const auth = getAuth();
-  const user = auth.currentUser;
-
-  if (user) {
-    document.getElementById("perfilNome").innerText = user.displayName || "Não informado";
-    document.getElementById("perfilEmail").innerText = user.email || "Não informado";
-    document.getElementById("perfilProvedor").innerText = user.providerData[0].providerId === "password" ? "Email/Senha" : "Google";
-    document.getElementById("perfilModal").style.display = "flex";
-  }
-});
-
-// Logout (já deve existir, mas pode garantir que está aqui)
-document.getElementById("logout").addEventListener("click", () => {
-  const auth = getAuth();
-  signOut(auth).then(() => {
-    window.location.href = "login.html";
-  }).catch((error) => {
-    alert("Erro ao sair: " + error.message);
-  });
-});
