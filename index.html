@@ -5,29 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SaveMoney</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <!-- Botão de Perfil -->
-  <button id="btnPerfil" class="perfil-btn">
-    <span>👤 Perfil</span>
+  <button id="perfilBtn" class="perfil-btn">
+    👤 Perfil
   </button>
 
   <!-- Modal de Perfil -->
   <div id="perfilModal" class="modal">
     <div class="modal-content">
-      <span id="closeModal" class="close">&times;</span>
+      <span id="fecharModal" class="close">&times;</span>
       <h2>Perfil do Usuário</h2>
-      <p><strong>Email:</strong> <span id="userEmail"></span></p>
-      <p><strong>UID:</strong> <span id="userUid"></span></p>
-      <button onclick="logout()">Sair</button>
+      <p><strong>Nome:</strong> <span id="userName">Carregando...</span></p>
+      <p><strong>Email:</strong> <span id="userEmail">Carregando...</span></p>
+      <button id="logoutBtn">Sair da conta</button>
     </div>
   </div>
 
   <div class="container">
-    <img src="logo-savemoney.png" alt="SaveMoney Logo" class="logo" />
+    <img src="logo.png" alt="SaveMoney Logo" class="logo" />
+
     <div class="formulario">
       <input type="text" id="descricao" placeholder="Descrição" />
       <input type="number" id="valor" placeholder="Valor" />
@@ -36,25 +35,21 @@
         <option value="saida">Saída</option>
       </select>
       <input type="date" id="data" />
-      <button onclick="adicionarTransacao()">Adicionar</button>
+      <button id="adicionarBtn">Adicionar</button>
     </div>
 
     <div class="resumo">
-      <p>Entradas: <span id="totalEntradas">R$ 0,00</span></p>
-      <p>Saídas: <span id="totalSaidas">R$ 0,00</span></p>
-      <p>Saldo Final: <span id="saldoFinal">R$ 0,00</span></p>
+      <h3>Resumo</h3>
+      <p>Total de Entradas: <span id="totalEntradas">R$ 0.00</span></p>
+      <p>Total de Saídas: <span id="totalSaidas">R$ 0.00</span></p>
+      <p>Saldo Final: <span id="saldoFinal">R$ 0.00</span></p>
     </div>
 
-    <canvas id="grafico" width="400" height="200"></canvas>
-
-    <div class="export-buttons">
-      <button onclick="exportarPDF()">Exportar PDF</button>
-      <button onclick="exportarExcel()">Exportar Excel</button>
-    </div>
+    <canvas id="grafico" width="400" height="400"></canvas>
 
     <div id="listaTransacoes"></div>
   </div>
 
-  <script type="module" src="script.js"></script>
+  <script type="module" src="dashboard.js"></script>
 </body>
 </html>
