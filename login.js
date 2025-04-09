@@ -33,7 +33,7 @@ loginForm.addEventListener("submit", (e) => {
 
   signInWithEmailAndPassword(auth, email, senha)
     .then(() => {
-      window.location.href = "painel.html";
+      window.location.href = "painel.html"; // ou "index.html" se for o nome do painel
     })
     .catch((error) => {
       errorMessage.textContent = "Erro: " + error.message;
@@ -47,20 +47,11 @@ if (googleBtn) {
   googleBtn.addEventListener("click", () => {
     signInWithPopup(auth, provider)
       .then(() => {
-        window.location.href = "painel.html";
+        window.location.href = "painel.html"; // ou "index.html"
       })
       .catch((error) => {
         errorMessage.textContent = "Erro: " + error.message;
         errorMessage.style.color = "red";
       });
   });
-}
-function loginUsuario(email, senha) {
-  // Supondo que você valide o login aqui
-  if (email === "teste@email.com" && senha === "123456") {
-    // Redireciona para a página principal
-    window.location.href = "index.html";
-  } else {
-    alert("Email ou senha incorretos!");
-  }
 }
