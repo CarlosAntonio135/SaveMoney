@@ -141,3 +141,22 @@ function exportarExcel() {
   XLSX.utils.book_append_sheet(workbook, worksheet, "Transações");
   XLSX.writeFile(workbook, "relatorio-financeiro.xlsx");
 }
+document.getElementById('btnPerfil').addEventListener('click', () => {
+  const dropdown = document.getElementById('perfilDropdown');
+  dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+});
+
+// Exibe nome e e-mail do usuário logado
+firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    document.getElementById('perfilNome').innerText = user.displayName || "Usuário";
+    document.getElementById('perfilEmail').innerText = user.email;
+  }
+});
+
+// Logout
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  firebase.auth().signOut().then(() => {
+    window.location.href = "login.html";
+  });
+});
