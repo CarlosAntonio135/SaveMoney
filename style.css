@@ -18,8 +18,11 @@ body {
 
 .logo {
   display: block;
-  margin: 0 auto 20px;
-  height: 60px;
+  margin: 20px auto;
+  width: 160px; /* aumenta o tamanho */
+  height: auto;
+}
+
 }
 
 .formulario input,
