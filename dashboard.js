@@ -160,3 +160,27 @@ function exportarExcel() {
   XLSX.utils.book_append_sheet(workbook, worksheet, "Transações");
   XLSX.writeFile(workbook, "relatorio-financeiro.xlsx");
 }
+import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+// Mostra o perfil
+document.getElementById("btnPerfil").addEventListener("click", () => {
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  if (user) {
+    document.getElementById("perfilNome").innerText = user.displayName || "Não informado";
+    document.getElementById("perfilEmail").innerText = user.email || "Não informado";
+    document.getElementById("perfilProvedor").innerText = user.providerData[0].providerId === "password" ? "Email/Senha" : "Google";
+    document.getElementById("perfilModal").style.display = "flex";
+  }
+});
+
+// Logout (já deve existir, mas pode garantir que está aqui)
+document.getElementById("logout").addEventListener("click", () => {
+  const auth = getAuth();
+  signOut(auth).then(() => {
+    window.location.href = "login.html";
+  }).catch((error) => {
+    alert("Erro ao sair: " + error.message);
+  });
+});
