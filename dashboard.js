@@ -1,4 +1,3 @@
-// dashboard.js
 import { auth, db } from "./firebaseConfig.js";
 import {
   onAuthStateChanged,
@@ -15,6 +14,7 @@ import {
 let transacoes = [];
 let currentUser = null;
 
+// Autenticação do usuário
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
@@ -26,22 +26,22 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
+// Carregar transações do Firestore
 async function carregarTransacoes() {
   if (!currentUser) return;
 
-  const q = query(
-    collection(db, "transacoes"),
-    where("uid", "==", currentUser.uid)
-  );
-
+  const q = query(collection(db, "transacoes"), where("uid", "==", currentUser.uid));
   const querySnapshot = await getDocs(q);
+
   transacoes = [];
   querySnapshot.forEach((doc) => {
     transacoes.push(doc.data());
   });
+
   atualizarInterface();
 }
 
+// Adicionar nova transação
 document.getElementById("adicionarBtn").addEventListener("click", adicionarTransacao);
 
 async function adicionarTransacao() {
@@ -66,6 +66,7 @@ async function adicionarTransacao() {
   limparCampos();
 }
 
+// Atualizar a interface com as transações
 function atualizarInterface() {
   const lista = document.getElementById("listaTransacoes");
   lista.innerHTML = "";
@@ -75,8 +76,8 @@ function atualizarInterface() {
 
   transacoes.forEach((t) => {
     const item = document.createElement("div");
-    item.classList.add("transacao-item");
-    item.innerHTML = `${t.descricao} - R$ ${t.valor.toFixed(2)} - ${t.tipo} - ${t.data}`;
+    item.className = "transacao-item";
+    item.innerText = `${t.descricao} - R$ ${t.valor.toFixed(2)} - ${t.tipo} - ${t.data}`;
     lista.appendChild(item);
 
     if (t.tipo === "entrada") totalEntradas += t.valor;
@@ -89,55 +90,46 @@ function atualizarInterface() {
   atualizarGrafico(totalEntradas, totalSaidas);
 }
 
+// Limpar campos do formulário
 function limparCampos() {
   document.getElementById("descricao").value = "";
   document.getElementById("valor").value = "";
   document.getElementById("data").value = "";
 }
 
+// Atualizar gráfico com Chart.js
 let grafico;
 function atualizarGrafico(entrada, saida) {
-  const ctx = document.getElementById('grafico').getContext('2d');
+  const ctx = document.getElementById("grafico").getContext("2d");
   if (grafico) grafico.destroy();
 
   grafico = new Chart(ctx, {
-    type: 'doughnut',
+    type: "doughnut",
     data: {
-      labels: ['Entradas', 'Saídas'],
+      labels: ["Entradas", "Saídas"],
       datasets: [{
         data: [entrada, saida],
-        backgroundColor: ['#00ff88', '#ff4b4b'],
-        borderWidth: 1
-      }]
+        backgroundColor: ["#00ff88", "#ff4b4b"],
+        borderWidth: 1,
+      }],
     },
     options: {
       plugins: {
         legend: {
-          labels: { color: '#fff' }
-        }
-      }
-    }
+          labels: { color: "#fff" },
+        },
+      },
+    },
   });
 }
 
+// Logout
 document.getElementById("logoutBtn").addEventListener("click", async () => {
   await signOut(auth);
   window.location.href = "login.html";
 });
 
-document.getElementById("perfilBtn").addEventListener("click", () => {
-  const modal = document.getElementById("perfilModal");
-  modal.style.display = "block";
-});
-
-document.getElementById("fecharModal").addEventListener("click", () => {
-  document.getElementById("perfilModal").style.display = "none";
-});
-
-document.addEventListener("click", function (event) {
-  const modal = document.getElementById("perfilModal");
-  const perfilBtn = document.getElementById("perfilBtn");
-  if (!perfilBtn.contains(event.target) && !modal.contains(event.target)) {
-    modal.style.display = "none";
-  }
-});
+// Abrir e fechar o modal de perfil
+window.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("perfilBtn").addEventListener("click", () => {
+    document.getElementById("perfilModal").style.display = "block
