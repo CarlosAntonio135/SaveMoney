@@ -32,7 +32,8 @@ if (loginForm) {
 
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
-        window.location.href = "dashboard.html";
+        
+        window.location.href = "painel.html";
       })
       .catch((error) => {
         errorMessage.textContent = "Erro ao entrar: " + error.message;
@@ -46,7 +47,8 @@ if (googleLogin) {
   googleLogin.addEventListener("click", () => {
     signInWithPopup(auth, provider)
       .then(() => {
-        window.location.href = "dashboard.html";
+       
+        window.location.href = "painel.html";
       })
       .catch((error) => {
         errorMessage.textContent = "Erro no login com Google: " + error.message;
@@ -56,6 +58,6 @@ if (googleLogin) {
 
 onAuthStateChanged(auth, (user) => {
   if (user && window.location.pathname.includes("login.html")) {
-    window.location.href = "dashboard.html";
+    window.location.href = "painel.html";
   }
 });
