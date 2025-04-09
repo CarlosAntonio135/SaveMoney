@@ -1,73 +1,62 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+import { auth } from "./firebaseConfig.js";
 import {
-  getAuth,
   signInWithEmailAndPassword,
+  onAuthStateChanged,
   signInWithPopup,
-  GoogleAuthProvider
-} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+  GoogleAuthProvider,
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// Configuração do Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyCmw9A3WvecBRr19MhIX5-wKLf66r-voig",
-  authDomain: "savemoney-7b401.firebaseapp.com",
-  projectId: "savemoney-7b401",
-  storageBucket: "savemoney-7b401.appspot.com",
-  messagingSenderId: "1036605042056",
-  appId: "1:1036605042056:web:1d5ee679915dba328c5e3d",
-  measurementId: "G-LX8LY8FF6M"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
-
-// Login com email e senha
-const loginForm = document.getElementById("loginForm");
-const errorMessage = document.getElementById("errorMessage");
-
-loginForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-
-  const email = document.getElementById("email").value;
-  const senha = document.getElementById("password").value;
-
-  signInWithEmailAndPassword(auth, email, senha)
-    .then(() => {
-      window.location.href = "index.html"; // ou "index.html" se for o nome do painel
-    })
-    .catch((error) => {
-      errorMessage.textContent = "Erro: " + error.message;
-      errorMessage.style.color = "red";
-    });
-});
-
-// Login com Google
-const googleBtn = document.getElementById("googleLogin");
-if (googleBtn) {
-  googleBtn.addEventListener("click", () => {
-    signInWithPopup(auth, provider)
-      .then(() => {
-        window.location.href = "index.html"; // ou "index.html"
-      })
-      .catch((error) => {
-        errorMessage.textContent = "Erro: " + error.message;
-        errorMessage.style.color = "red";
-      });
-  });
-}
-signInWithEmailAndPassword(auth, email, senha)
-  .then((userCredential) => {
-    const user = userCredential.user;
-    
-    // 🔐 Salva no localStorage para manter logado
+// Verifica se já está logado e redireciona
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // Salva dados no localStorage
     localStorage.setItem("usuarioLogado", JSON.stringify({
       uid: user.uid,
       email: user.email,
       displayName: user.displayName
     }));
-
     window.location.href = "index.html";
-  })
-  .catch((error) => {
-    alert("Erro ao fazer login: " + error.message);
-  });
+  }
+});
+
+// Login com email e senha
+document.getElementById("loginForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("email").value;
+  const senha = document.getElementById("senha").value;
+
+  signInWithEmailAndPassword(auth, email, senha)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      localStorage.setItem("usuarioLogado", JSON.stringify({
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName
+      }));
+      window.location.href = "index.html";
+    })
+    .catch((error) => {
+      alert("Erro ao fazer login: " + error.message);
+    });
+});
+
+// Login com Google
+document.getElementById("loginGoogle").addEventListener("click", () => {
+  const provider = new GoogleAuthProvider();
+
+  signInWithPopup(auth, provider)
+    .then((result) => {
+      const user = result.user;
+      localStorage.setItem("usuarioLogado", JSON.stringify({
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName
+      }));
+      window.location.href = "index.html";
+    })
+    .catch((error) => {
+      alert("Erro no login com Google: " + error.message);
+    });
+});
+
