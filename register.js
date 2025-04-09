@@ -19,7 +19,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 const registerForm = document.getElementById("registerForm");
-const registerMessage = document.getElementById("registerMessage");
+const errorMessage = document.getElementById("errorMessage");
 
 registerForm.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -29,14 +29,11 @@ registerForm.addEventListener("submit", (e) => {
 
   createUserWithEmailAndPassword(auth, email, senha)
     .then(() => {
-      registerMessage.textContent = "Cadastro realizado com sucesso!";
-      registerMessage.style.color = "green";
-      setTimeout(() => {
-        window.location.href = "login.html";
-      }, 2000);
+      // Após o registro, redireciona para o painel
+      window.location.href = "painel.html";
     })
     .catch((error) => {
-      registerMessage.textContent = "Erro: " + error.message;
-      registerMessage.style.color = "red";
+      errorMessage.textContent = "Erro: " + error.message;
+      errorMessage.style.color = "red";
     });
 });
