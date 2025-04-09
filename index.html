@@ -2,23 +2,27 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SaveMoney</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script type="module" src="dashboard.js" defer></script>
 </head>
 <body>
-  <div class="top-bar">
-    <button id="btnPerfil" class="perfil-btn">
-      <span class="icon">👤</span> Perfil
-    </button>
-    <div id="perfilDropdown" class="perfil-dropdown" style="display: none;">
-      <p><strong>Nome:</strong> <span id="perfilNome">...</span></p>
-      <p><strong>Email:</strong> <span id="perfilEmail">...</span></p>
-      <button id="logoutBtn">Sair</button>
+  <!-- Botão de Perfil -->
+  <button id="btnPerfil" class="perfil-btn">
+    <span>👤 Perfil</span>
+  </button>
+
+  <!-- Modal de Perfil -->
+  <div id="perfilModal" class="modal">
+    <div class="modal-content">
+      <span id="closeModal" class="close">&times;</span>
+      <h2>Perfil do Usuário</h2>
+      <p><strong>Email:</strong> <span id="userEmail"></span></p>
+      <p><strong>UID:</strong> <span id="userUid"></span></p>
+      <button onclick="logout()">Sair</button>
     </div>
   </div>
 
@@ -50,5 +54,7 @@
 
     <div id="listaTransacoes"></div>
   </div>
+
+  <script type="module" src="script.js"></script>
 </body>
 </html>
