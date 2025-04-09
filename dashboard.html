@@ -1,34 +1,41 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <title>SaveMoney - Login</title>
-  <link rel="stylesheet" href="style.css">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8768593207303475"
-     crossorigin="anonymous"></script>
-</head>
-<body>
-  <div id="login-container">
-    <h1>Login</h1>
-    <input type="text" id="username" placeholder="Nome de usuário">
-    <input type="password" id="password" placeholder="Senha">
-    <button onclick="login()">Entrar</button>
-    <p id="login-error" class="error"></p>
-  </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SaveMoney - Painel</title>
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="firebase.js"></script>
+  </head>
+  <body class="dark-mode">
+    <header>
+      <img src="logo-savemoney.png" alt="SaveMoney" class="logo-small" />
+      <h1>Dashboard</h1>
+      <button id="logout">Sair</button>
+    </header>
 
-  <script src="script.js"></script>
+    <main>
+      <section class="summary">
+        <h2>Resumo Financeiro</h2>
+        <p id="balance">Saldo: R$ 0,00</p>
+      </section>
 
-<ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-client="ca-pub-8768593207333475"
-     data-ad-slot="1722119086"
-     data-ad-format="auto"
-     data-full-width-responsive="true">
-</ins>
+      <section class="transactions">
+        <h2>Transações</h2>
+        <ul id="transaction-list"></ul>
+      </section>
 
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+      <section class="actions">
+        <input type="text" id="description" placeholder="Descrição" />
+        <input type="number" id="amount" placeholder="Valor" />
+        <select id="type">
+          <option value="income">Receita</option>
+          <option value="expense">Despesa</option>
+        </select>
+        <button id="add-transaction">Adicionar</button>
+      </section>
+    </main>
 
-</body>
+    <script type="module" src="dashboard.js"></script>
+  </body>
 </html>
