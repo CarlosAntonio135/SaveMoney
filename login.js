@@ -6,10 +6,8 @@ import {
   GoogleAuthProvider,
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// Verifica se já está logado e redireciona
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    // Salva dados no localStorage
     localStorage.setItem("usuarioLogado", JSON.stringify({
       uid: user.uid,
       email: user.email,
@@ -19,7 +17,6 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// Login com email e senha
 document.getElementById("loginForm").addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -41,7 +38,6 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
     });
 });
 
-// Login com Google
 document.getElementById("loginGoogle").addEventListener("click", () => {
   const provider = new GoogleAuthProvider();
 
