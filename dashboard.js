@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("userName").textContent = usuarioLogado.nome || "Usuário";
   document.getElementById("userEmail").textContent = usuarioLogado.email || "Email";
 
+document.addEventListener("DOMContentLoaded", () => {
   const perfilBtn = document.getElementById("perfilBtn");
   const perfilModal = document.getElementById("perfilModal");
   const fecharModal = document.getElementById("fecharModal");
@@ -20,6 +21,14 @@ document.addEventListener("DOMContentLoaded", () => {
   fecharModal.addEventListener("click", () => {
     perfilModal.style.display = "none";
   });
+
+  window.addEventListener("click", (e) => {
+    if (e.target === perfilModal) {
+      perfilModal.style.display = "none";
+    }
+  });
+});
+
 
   window.addEventListener("click", (e) => {
     if (e.target === perfilModal) {
