@@ -27,10 +27,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  logoutBtn.addEventListener("click", () => {
+import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { auth } from "./firebaseConfig.js";
+
+logoutBtn.addEventListener("click", async () => {
+  try {
+    await signOut(auth);
     localStorage.removeItem("usuarioLogado");
     window.location.href = "login.html";
-  });
+  } catch (error) {
+    alert("Erro ao sair: " + error.message);
+  }
+});
 
   const listaTransacoes = document.getElementById("listaTransacoes");
   const totalEntradas = document.getElementById("totalEntradas");
