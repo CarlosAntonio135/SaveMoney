@@ -1,16 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Verifica se o usuário está logado
   const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
   if (!usuarioLogado) {
     window.location.href = "login.html";
     return;
   }
 
-  // Preencher dados do perfil
   document.getElementById("userName").textContent = usuarioLogado.nome || "Usuário";
   document.getElementById("userEmail").textContent = usuarioLogado.email || "Email";
 
-  // Modal de perfil
   const perfilBtn = document.getElementById("perfilBtn");
   const perfilModal = document.getElementById("perfilModal");
   const fecharModal = document.getElementById("fecharModal");
@@ -35,7 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "login.html";
   });
 
-  // Funções de transações
   const listaTransacoes = document.getElementById("listaTransacoes");
   const totalEntradas = document.getElementById("totalEntradas");
   const totalSaidas = document.getElementById("totalSaidas");
@@ -89,13 +85,11 @@ document.addEventListener("DOMContentLoaded", () => {
     salvarTransacoes();
     renderizarTransacoes();
 
-    // Limpar inputs
     document.getElementById("descricao").value = "";
     document.getElementById("valor").value = "";
     document.getElementById("data").value = "";
   };
 
-  // Exportar PDF
   window.exportarPDF = () => {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -106,7 +100,6 @@ document.addEventListener("DOMContentLoaded", () => {
     doc.save("relatorio.pdf");
   };
 
-  // Exportar Excel
   window.exportarExcel = () => {
     const wb = XLSX.utils.book_new();
     const ws_data = [["Data", "Tipo", "Descrição", "Valor"]];
@@ -118,7 +111,6 @@ document.addEventListener("DOMContentLoaded", () => {
     XLSX.writeFile(wb, "relatorio.xlsx");
   };
 
-  // Gráfico
   let grafico;
   function atualizarGrafico() {
     const ctx = document.getElementById("grafico").getContext("2d");
