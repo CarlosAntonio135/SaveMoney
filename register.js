@@ -4,7 +4,6 @@ import {
   createUserWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
-// Configuração do Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyCmw9A3WvecBRr19MhIX5-wKLf66r-voig",
   authDomain: "savemoney-7b401.firebaseapp.com",
@@ -29,8 +28,7 @@ registerForm.addEventListener("submit", (e) => {
 
   createUserWithEmailAndPassword(auth, email, senha)
     .then(() => {
-      // Após o registro, redireciona para o painel
-      window.location.href = "login.html";
+      window.location.href = "index.html";
     })
     .catch((error) => {
       errorMessage.textContent = "Erro: " + error.message;
