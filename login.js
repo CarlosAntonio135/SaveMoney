@@ -6,7 +6,8 @@ import {
   GoogleAuthProvider,
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-window.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
+
   onAuthStateChanged(auth, (user) => {
     if (user) {
       localStorage.setItem("usuarioLogado", JSON.stringify({
@@ -18,13 +19,13 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  const loginForm = document.getElementById("loginForm");
-  if (loginForm) {
-    loginForm.addEventListener("submit", (e) => {
+  const form = document.getElementById("loginForm");
+  if (form) {
+    form.addEventListener("submit", (e) => {
       e.preventDefault();
 
       const email = document.getElementById("email").value;
-      const senha = document.getElementById("senha").value;
+      const senha = document.getElementById("password").value;
 
       signInWithEmailAndPassword(auth, email, senha)
         .then((userCredential) => {
@@ -37,12 +38,13 @@ window.addEventListener("DOMContentLoaded", () => {
           window.location.href = "index.html";
         })
         .catch((error) => {
-          alert("Erro ao fazer login: " + error.message);
+          document.getElementById("errorMessage").textContent = "Erro: " + error.message;
         });
     });
   }
 
-  const googleBtn = document.getElementById("loginGoogle");
+
+  const googleBtn = document.getElementById("googleLogin");
   if (googleBtn) {
     googleBtn.addEventListener("click", () => {
       const provider = new GoogleAuthProvider();
@@ -58,8 +60,9 @@ window.addEventListener("DOMContentLoaded", () => {
           window.location.href = "index.html";
         })
         .catch((error) => {
-          alert("Erro no login com Google: " + error.message);
+          document.getElementById("errorMessage").textContent = "Erro no login com Google: " + error.message;
         });
     });
   }
+
 });
