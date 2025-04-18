@@ -147,4 +147,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   renderizarTransacoes();
+
+  window.limparHistorico = () => {
+    if (confirm("Tem certeza que deseja apagar todo o histórico de transações?")) {
+      transacoes = [];
+      salvarTransacoes();
+      renderizarTransacoes();
+    }
+  };
 });
