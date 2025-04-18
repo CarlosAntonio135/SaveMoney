@@ -35,23 +35,28 @@
 </head>
 <body>
 
-  <!-- Anúncios visíveis apenas com conteúdo -->
-  <div class="ads-lateral ads-left" id="adsLeft" style="display: none;">
+  <div class="ads-lateral ads-left">
     <ins class="adsbygoogle"
          style="display:block"
          data-ad-client="ca-pub-8768593207303475"
          data-ad-slot="2316552437"
          data-ad-format="auto"
          data-full-width-responsive="true"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
   </div>
 
-  <div class="ads-lateral ads-right" id="adsRight" style="display: none;">
+  <div class="ads-lateral ads-right">
     <ins class="adsbygoogle"
          style="display:block"
          data-ad-client="ca-pub-8768593207303475"
          data-ad-slot="7132334226"
          data-ad-format="auto"
          data-full-width-responsive="true"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
   </div>
 
   <button id="perfilBtn" class="perfil-btn">👤</button>
@@ -101,23 +106,8 @@
     <a href="termos.html">Termos de Uso</a>
   </footer>
 
+  <button class="btn-limpar" onclick="limparHistorico()">🗑️ Limpar Histórico</button>
+
   <script type="module" src="dashboard.js"></script>
-
-  <!-- Script para só exibir os anúncios se houver conteúdo -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const conteudo = document.querySelector('.container');
-
-      if (conteudo && conteudo.innerText.trim().length > 100) {
-        document.getElementById('adsLeft').style.display = 'block';
-        document.getElementById('adsRight').style.display = 'block';
-
-        (adsbygoogle = window.adsbygoogle || []).push({});
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      } else {
-        console.log("Anúncios ocultos por falta de conteúdo.");
-      }
-    });
-  </script>
 </body>
 </html>
