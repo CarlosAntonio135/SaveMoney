@@ -142,3 +142,23 @@ canvas#grafico {
   font-weight: bold;
   cursor: pointer;
 }
+.btn-limpar {
+  background-color: #1a1a1a;
+  color: #ffd700;
+  border: 2px solid #ffd700;
+  padding: 10px 20px;
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-limpar:hover {
+  background-color: #ffd700;
+  color: #1a1a1a;
+}
