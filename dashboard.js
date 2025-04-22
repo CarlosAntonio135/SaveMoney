@@ -56,21 +56,20 @@ document.addEventListener("DOMContentLoaded", () => {
     let entradas = 0, saidas = 0;
 
     transacoes.forEach(t => {
-      if (t.tipo === "entrada") {
-        entradas += t.valor;
-      } else {
-        saidas += t.valor;
-      }
+      if (t.tipo === "entrada") entradas += t.valor;
+      else saidas += t.valor;
     });
 
     totalEntradas.textContent = `R$ ${entradas.toFixed(2)}`;
     totalSaidas.textContent = `R$ ${saidas.toFixed(2)}`;
-    saldoFinal.textContent = `R$ ${(entradas - saidas).toFixed(2)}`;
+    const saldo = entradas - saidas;
+    saldoFinal.textContent = `R$ ${saldo.toFixed(2)}`;
+    atualizarMetaComSaldo(saldo);
   }
 
   function renderizarTransacoes() {
     listaTransacoes.innerHTML = "";
-    transacoes.forEach((t, i) => {
+    transacoes.forEach(t => {
       const div = document.createElement("div");
       div.textContent = `${t.data} - ${t.tipo} - ${t.descricao}: R$ ${t.valor.toFixed(2)}`;
       listaTransacoes.appendChild(div);
@@ -112,9 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.exportarExcel = () => {
     const wb = XLSX.utils.book_new();
     const ws_data = [["Data", "Tipo", "Descrição", "Valor"]];
-    transacoes.forEach(t => {
-      ws_data.push([t.data, t.tipo, t.descricao, t.valor]);
-    });
+    transacoes.forEach(t => ws_data.push([t.data, t.tipo, t.descricao, t.valor]));
     const ws = XLSX.utils.aoa_to_sheet(ws_data);
     XLSX.utils.book_append_sheet(wb, ws, "Transações");
     XLSX.writeFile(wb, "relatorio.xlsx");
@@ -138,15 +135,11 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       options: {
         plugins: {
-          legend: {
-            labels: { color: "#fff" }
-          }
+          legend: { labels: { color: "#fff" } }
         }
       }
     });
   }
-
-  renderizarTransacoes();
 
   window.limparHistorico = () => {
     if (confirm("Tem certeza que deseja apagar todo o histórico de transações?")) {
@@ -155,58 +148,67 @@ document.addEventListener("DOMContentLoaded", () => {
       renderizarTransacoes();
     }
   };
+
+  renderizarTransacoes();
+
+  // Alternar abas
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = link.getAttribute('href').substring(1);
+      document.querySelectorAll('main section').forEach(sec => {
+        sec.style.display = sec.id === target ? 'block' : 'none';
+      });
+    });
+  });
+
+  // Metas
+  const formMeta = document.getElementById('formMeta');
+  const listaMetas = document.getElementById('listaMetas');
+  let metas = JSON.parse(localStorage.getItem('metas')) || [];
+
+  function renderizarMetas() {
+    listaMetas.innerHTML = '';
+    metas.forEach((meta) => {
+      const progresso = Math.min((meta.atual / meta.valor) * 100, 100);
+      listaMetas.innerHTML += `
+        <div class="meta-card">
+          <strong>${meta.nome}</strong><br>
+          R$ ${meta.atual.toFixed(2)} de R$ ${meta.valor.toFixed(2)}
+          <div class="meta-progress">
+            <div class="meta-progress-bar" style="width:${progresso}%;"></div>
+          </div>
+          <small>Data limite: ${meta.data}</small>
+        </div>
+      `;
+    });
+  }
+
+  formMeta?.addEventListener('submit', e => {
+    e.preventDefault();
+    const nome = document.getElementById('nomeMeta').value;
+    const valor = parseFloat(document.getElementById('valorMeta').value);
+    const data = document.getElementById('dataMeta').value;
+    metas.push({ nome, valor, data, atual: obterSaldo() });
+    localStorage.setItem('metas', JSON.stringify(metas));
+    formMeta.reset();
+    renderizarMetas();
+  });
+
+  function atualizarMetaComSaldo(saldo) {
+    metas = metas.map(meta => ({
+      ...meta,
+      atual: Math.min(meta.valor, saldo)
+    }));
+    localStorage.setItem('metas', JSON.stringify(metas));
+    renderizarMetas();
+  }
+
+  function obterSaldo() {
+    const entradas = parseFloat(totalEntradas.textContent.replace("R$", "").replace(",", ".")) || 0;
+    const saidas = parseFloat(totalSaidas.textContent.replace("R$", "").replace(",", ".")) || 0;
+    return entradas - saidas;
+  }
+
+  renderizarMetas();
 });
-// Alternar abas
-document.querySelectorAll('.nav-links a').forEach(link => {
-  link.addEventListener('click', e => {
-    e.preventDefault()
-    const target = link.getAttribute('href').substring(1)
-    document.querySelectorAll('main section').forEach(sec => {
-      sec.style.display = sec.id === target ? 'block' : 'none'
-    })
-  })
-})
-
-// Metas
-const formMeta = document.getElementById('formMeta')
-const listaMetas = document.getElementById('listaMetas')
-
-let metas = JSON.parse(localStorage.getItem('metas')) || []
-
-function renderizarMetas() {
-  listaMetas.innerHTML = ''
-  metas.forEach((meta, i) => {
-    const progresso = Math.min((meta.atual / meta.valor) * 100, 100)
-    listaMetas.innerHTML += `
-      <div class="meta-card">
-        <strong>${meta.nome}</strong><br>
-        R$ ${meta.atual.toFixed(2)} de R$ ${meta.valor.toFixed(2)}
-        <div class="meta-progress"><div class="meta-progress-bar" style="width:${progresso}%;"></div></div>
-        <small>Data limite: ${meta.data}</small>
-      </div>
-    `
-  })
-}
-
-formMeta.addEventListener('submit', e => {
-  e.preventDefault()
-  const nome = document.getElementById('nomeMeta').value
-  const valor = parseFloat(document.getElementById('valorMeta').value)
-  const data = document.getElementById('dataMeta').value
-  metas.push({ nome, valor, data, atual: 0 })
-  localStorage.setItem('metas', JSON.stringify(metas))
-  formMeta.reset()
-  renderizarMetas()
-})
-
-// Exemplo: atualizar meta com base no saldo (simples)
-function atualizarMetaComSaldo(saldo) {
-  metas = metas.map(meta => ({
-    ...meta,
-    atual: Math.min(meta.valor, saldo)
-  }))
-  localStorage.setItem('metas', JSON.stringify(metas))
-  renderizarMetas()
-}
-
-renderizarMetas()
