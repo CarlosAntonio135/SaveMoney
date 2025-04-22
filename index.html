@@ -83,6 +83,45 @@
       <input type="date" id="data" />
       <button onclick="adicionarTransacao()">Adicionar</button>
     </div>
+    <header class="navbar">
+  <div class="logo">SaveMoney</div>
+  <nav>
+    <ul class="nav-links">
+      <li><a href="#dashboard">Dashboard</a></li>
+      <li><a href="#metas">Metas</a></li>
+      <li><a href="#relatorios">Relatórios</a></li>
+      <li><a href="#config">Configurações</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <section id="dashboard">
+    <!-- Aqui fica sua área principal existente (transações, gráfico, etc) -->
+  </section>
+
+  <section id="metas" style="display:none;">
+    <h2>Metas Financeiras</h2>
+    <form id="formMeta">
+      <input type="text" id="nomeMeta" placeholder="Nome da Meta" required />
+      <input type="number" id="valorMeta" placeholder="Valor objetivo (R$)" required />
+      <input type="date" id="dataMeta" required />
+      <button type="submit">Criar Meta</button>
+    </form>
+    <div id="listaMetas"></div>
+  </section>
+
+  <section id="relatorios" style="display:none;">
+    <h2>Relatórios</h2>
+    <p>Funções de exportação em PDF, Excel e gráficos comparativos.</p>
+  </section>
+
+  <section id="config" style="display:none;">
+    <h2>Configurações</h2>
+    <p>Configurações da conta e preferências.</p>
+  </section>
+</main>
+
 
     <div class="resumo">
       <p>Entradas: <span id="totalEntradas">R$ 0,00</span></p>
