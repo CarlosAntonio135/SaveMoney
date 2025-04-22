@@ -1,5 +1,3 @@
-/* style.css */
-
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -22,6 +20,9 @@ body {
 .logo {
   width: 200px;
   margin: 20px auto;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffd700;
 }
 
 .formulario {
@@ -142,6 +143,7 @@ canvas#grafico {
   font-weight: bold;
   cursor: pointer;
 }
+
 .btn-limpar {
   background-color: #1a1a1a;
   color: #ffd700;
@@ -162,6 +164,7 @@ canvas#grafico {
   background-color: #ffd700;
   color: #1a1a1a;
 }
+
 .navbar {
   background: #1e1e1e;
   color: white;
@@ -170,38 +173,44 @@ canvas#grafico {
   justify-content: space-between;
   align-items: center;
 }
-.logo {
-  font-size: 1.5rem;
-  color: #ffd700;
-}
+
 .nav-links {
   list-style: none;
   display: flex;
   gap: 2rem;
 }
+
 .nav-links li a {
   color: white;
   text-decoration: none;
 }
+
 .nav-links li a:hover {
   color: #ffd700;
 }
+
 #formMeta {
   margin: 1rem 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-#formMeta input, #formMeta button {
+
+#formMeta input,
+#formMeta button {
   padding: 0.7rem;
   font-size: 1rem;
+  border-radius: 6px;
+  border: none;
 }
+
 .meta-card {
   background: #2c2c2c;
   padding: 1rem;
   margin-bottom: 1rem;
   border-radius: 8px;
 }
+
 .meta-progress {
   height: 10px;
   background: #444;
@@ -209,6 +218,7 @@ canvas#grafico {
   border-radius: 5px;
   overflow: hidden;
 }
+
 .meta-progress-bar {
   height: 100%;
   background: #00c853;
