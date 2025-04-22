@@ -156,3 +156,57 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 });
+// Alternar abas
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault()
+    const target = link.getAttribute('href').substring(1)
+    document.querySelectorAll('main section').forEach(sec => {
+      sec.style.display = sec.id === target ? 'block' : 'none'
+    })
+  })
+})
+
+// Metas
+const formMeta = document.getElementById('formMeta')
+const listaMetas = document.getElementById('listaMetas')
+
+let metas = JSON.parse(localStorage.getItem('metas')) || []
+
+function renderizarMetas() {
+  listaMetas.innerHTML = ''
+  metas.forEach((meta, i) => {
+    const progresso = Math.min((meta.atual / meta.valor) * 100, 100)
+    listaMetas.innerHTML += `
+      <div class="meta-card">
+        <strong>${meta.nome}</strong><br>
+        R$ ${meta.atual.toFixed(2)} de R$ ${meta.valor.toFixed(2)}
+        <div class="meta-progress"><div class="meta-progress-bar" style="width:${progresso}%;"></div></div>
+        <small>Data limite: ${meta.data}</small>
+      </div>
+    `
+  })
+}
+
+formMeta.addEventListener('submit', e => {
+  e.preventDefault()
+  const nome = document.getElementById('nomeMeta').value
+  const valor = parseFloat(document.getElementById('valorMeta').value)
+  const data = document.getElementById('dataMeta').value
+  metas.push({ nome, valor, data, atual: 0 })
+  localStorage.setItem('metas', JSON.stringify(metas))
+  formMeta.reset()
+  renderizarMetas()
+})
+
+// Exemplo: atualizar meta com base no saldo (simples)
+function atualizarMetaComSaldo(saldo) {
+  metas = metas.map(meta => ({
+    ...meta,
+    atual: Math.min(meta.valor, saldo)
+  }))
+  localStorage.setItem('metas', JSON.stringify(metas))
+  renderizarMetas()
+}
+
+renderizarMetas()
