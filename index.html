@@ -59,6 +59,79 @@
     </script>
   </div>
 
+  <header class="navbar">
+  <div class="logo">SaveMoney</div>
+  <nav>
+    <ul class="nav-links">
+      <li><a href="#dashboard">Dashboard</a></li>
+      <li><a href="#metas">Metas</a></li>
+      <li><a href="#relatorios">Relatórios</a></li>
+      <li><a href="#config">Configurações</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <section id="dashboard">
+    <div class="container">
+      <img src="logo.png" alt="SaveMoney Logo" class="logo" />
+      <div class="formulario">
+        <input type="text" id="descricao" placeholder="Descrição" />
+        <input type="number" id="valor" placeholder="Valor" />
+        <select id="tipo">
+          <option value="entrada">Entrada</option>
+          <option value="saida">Saída</option>
+        </select>
+        <input type="date" id="data" />
+        <button onclick="adicionarTransacao()">Adicionar</button>
+      </div>
+
+      <div class="resumo">
+        <p>Entradas: <span id="totalEntradas">R$ 0,00</span></p>
+        <p>Saídas: <span id="totalSaidas">R$ 0,00</span></p>
+        <p>Saldo Final: <span id="saldoFinal">R$ 0,00</span></p>
+      </div>
+
+      <canvas id="grafico" width="400" height="200"></canvas>
+
+      <div class="export-buttons">
+        <button onclick="exportarPDF()">Exportar PDF</button>
+        <button onclick="exportarExcel()">Exportar Excel</button>
+      </div>
+
+      <div id="listaTransacoes"></div>
+    </div>
+  </section>
+
+  <section id="metas" style="display: none;">
+    <div class="container">
+      <h2>Metas Financeiras</h2>
+      <form id="formMeta">
+        <input type="text" id="nomeMeta" placeholder="Nome da Meta" required />
+        <input type="number" id="valorMeta" placeholder="Valor objetivo (R$)" required />
+        <input type="date" id="dataMeta" required />
+        <button type="submit">Criar Meta</button>
+      </form>
+      <div id="listaMetas"></div>
+    </div>
+  </section>
+
+  <section id="relatorios" style="display: none;">
+    <div class="container">
+      <h2>Relatórios</h2>
+      <p>Funções de exportação em PDF, Excel e gráficos comparativos.</p>
+    </div>
+  </section>
+
+  <section id="config" style="display: none;">
+    <div class="container">
+      <h2>Configurações</h2>
+      <p>Configurações da conta e preferências.</p>
+    </div>
+  </section>
+</main>
+
+
   <button id="perfilBtn" class="perfil-btn">👤</button>
 
   <div id="perfilModal" class="modal">
