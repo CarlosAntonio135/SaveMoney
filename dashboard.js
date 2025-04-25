@@ -1,22 +1,20 @@
 // dashboard.js
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { auth } from "./firebaseConfig.js";
+import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey: "sua-chave",
-  authDomain: "seu-app.firebaseapp.com",
-  projectId: "seu-app",
-  storageBucket: "seu-app.appspot.com",
-  messagingSenderId: "123",
-  appId: "123",
-};
+// Verificação de login
+onAuthStateChanged(auth, user => {
+  if (user) {
+    document.getElementById("userName").textContent = user.displayName || "Usuário";
+    document.getElementById("userEmail").textContent = user.email || "Email";
+  } else {
+    if (!location.href.includes("login.html")) {
+      location.href = "login.html";
+    }
+  }
+});
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-const userName = document.getElementById("userName");
-const userEmail = document.getElementById("userEmail");
 const perfilBtn = document.getElementById("perfilBtn");
 const perfilModal = document.getElementById("perfilModal");
 const fecharModal = document.getElementById("fecharModal");
@@ -26,15 +24,6 @@ perfilBtn.onclick = () => perfilModal.style.display = "block";
 fecharModal.onclick = () => perfilModal.style.display = "none";
 window.onclick = e => { if (e.target === perfilModal) perfilModal.style.display = "none"; };
 logoutBtn.onclick = () => signOut(auth).then(() => location.href = "login.html");
-
-onAuthStateChanged(auth, user => {
-  if (user) {
-    userName.textContent = user.displayName || "Usuário";
-    userEmail.textContent = user.email || "Email";
-  } else {
-    location.href = "login.html";
-  }
-});
 
 const listaTransacoes = document.getElementById("listaTransacoes");
 let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
