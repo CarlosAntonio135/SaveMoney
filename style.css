@@ -1,20 +1,10 @@
-/* Reset */
-body, h1, h2, h3, p, ul, li, a, button {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
+  margin: 0;
   font-family: Arial, sans-serif;
   background-color: #121212;
   color: #fff;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
-/* Navbar */
 .navbar {
   background: #1e1e1e;
   padding: 1rem 2rem;
@@ -23,7 +13,6 @@ body {
   align-items: center;
   position: sticky;
   top: 0;
-  z-index: 100;
 }
 
 .logo {
@@ -42,7 +31,6 @@ body {
   color: #fff;
   text-decoration: none;
   font-size: 1rem;
-  transition: color 0.3s;
 }
 
 .nav-links a:hover {
@@ -57,19 +45,91 @@ body {
   cursor: pointer;
 }
 
-/* Container Principal */
 .container {
-  flex: 1;
   padding: 2rem;
   max-width: 960px;
   margin: auto;
 }
 
-section {
-  margin-bottom: 2rem;
+.formulario {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-/* Modal de Perfil */
+.formulario input,
+.formulario select,
+.formulario button {
+  flex: 1 1 100%;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 6px;
+  background: #2c2c2c;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.formulario button {
+  background-color: #ffcc00;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.resumo {
+  margin-top: 2rem;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.export-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 2rem 0;
+}
+
+.lista-transacoes {
+  margin-top: 2rem;
+}
+
+.transacao-item {
+  background: #1e1e1e;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.btn-limpar {
+  display: block;
+  margin: 2rem auto;
+  padding: 10px 20px;
+  background: #1e1e1e;
+  color: #ffd700;
+  border: 2px solid #ffd700;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.footer {
+  text-align: center;
+  font-size: 0.9rem;
+  padding: 1rem;
+  background: #1a1a1a;
+}
+
+.footer a {
+  color: #ccc;
+  text-decoration: none;
+  margin: 0 0.5rem;
+}
+
+.footer a:hover {
+  color: #ffcc00;
+}
+
 .modal {
   display: none;
   position: fixed;
@@ -96,45 +156,4 @@ section {
   font-weight: bold;
   color: #ffcc00;
   cursor: pointer;
-}
-
-button {
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  opacity: 0.9;
-}
-
-/* Footer */
-.footer {
-  text-align: center;
-  font-size: 0.9rem;
-  padding: 1rem;
-  background: #1a1a1a;
-}
-
-.footer a {
-  color: #ccc;
-  text-decoration: none;
-  margin: 0 0.5rem;
-}
-
-.footer a:hover {
-  color: #ffcc00;
-}
-
-/* Responsivo */
-@media (max-width: 768px) {
-  .nav-links {
-    gap: 1rem;
-  }
-
-  .container {
-    padding: 1rem;
-  }
 }
