@@ -1,73 +1,101 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SaveMoney</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8768593207303475" crossorigin="anonymous"></script>
 </head>
 <body>
-  <header class="navbar">
-    <div class="logo">SaveMoney</div>
-    <nav>
-      <ul class="nav-links">
-        <li><a href="#dashboard">Inicio</a></li>
-        <li><a href="#metas">Metas</a></li>
-        <li><a href="#relatorios">Relatórios</a></li>
-        <li><a href="#config">Configurações</a></li>
-        <li><a href="#premium">Premium</a></li>
-      </ul>
-    </nav>
-    <button id="perfilBtn" class="perfil-btn">👤</button>
-  </header>
 
-  <div id="perfilModal" class="modal">
-    <div class="modal-content">
-      <span id="fecharModal" class="close">&times;</span>
-      <h2>Perfil</h2>
-      <p><strong>Nome:</strong> <span id="userName"></span></p>
-      <p><strong>Email:</strong> <span id="userEmail"></span></p>
-      <button id="logoutBtn">Sair</button>
-    </div>
+<header class="navbar">
+  <div class="logo">SaveMoney</div>
+  <nav>
+    <ul class="nav-links">
+      <li><a href="#dashboard">Dashboard</a></li>
+      <li><a href="#metas">Metas</a></li>
+      <li><a href="#relatorios">Relatórios</a></li>
+      <li><a href="#config">Configurações</a></li>
+      <li><a href="#premium">Premium</a></li>
+    </ul>
+  </nav>
+  <button id="perfilBtn" class="perfil-btn">👤</button>
+</header>
+
+<div id="perfilModal" class="modal">
+  <div class="modal-content">
+    <span id="fecharModal" class="close">&times;</span>
+    <h2>Perfil</h2>
+    <p><strong>Nome:</strong> <span id="userName"></span></p>
+    <p><strong>Email:</strong> <span id="userEmail"></span></p>
+    <button id="logoutBtn">Sair</button>
   </div>
+</div>
 
-  <main class="container">
-    <section id="Inicio">
-      <h2>Inicio</h2>
-      <p>Aqui você visualizará suas entradas, saídas e saldo geral.</p>
-    </section>
+<main class="container">
+  <section id="dashboard">
+    <h2>Dashboard Financeiro</h2>
 
-    <section id="metas" style="display: none;">
-      <h2>Metas</h2>
-      <p>Acompanhe suas metas financeiras aqui.</p>
-    </section>
+    <div class="formulario">
+      <input type="text" id="descricao" placeholder="Descrição" />
+      <input type="number" id="valor" placeholder="Valor" />
+      <select id="tipo">
+        <option value="entrada">Entrada</option>
+        <option value="saida">Saída</option>
+      </select>
+      <input type="date" id="data" />
+      <button onclick="adicionarTransacao()">Adicionar Transação</button>
+    </div>
 
-    <section id="relatorios" style="display: none;">
-      <h2>Relatórios</h2>
-      <p>Gere relatórios personalizados e exporte seus dados.</p>
-    </section>
+    <div class="resumo">
+      <p>Entradas: <span id="totalEntradas">R$ 0,00</span></p>
+      <p>Saídas: <span id="totalSaidas">R$ 0,00</span></p>
+      <p>Saldo Final: <span id="saldoFinal">R$ 0,00</span></p>
+    </div>
 
-    <section id="config" style="display: none;">
-      <h2>Configurações</h2>
-      <p>Altere preferências da sua conta e visual.</p>
-    </section>
+    <canvas id="grafico" width="400" height="200"></canvas>
 
-    <section id="premium" style="display: none;">
-      <h2>Plano Premium</h2>
-      <p>Descubra os benefícios exclusivos do SaveMoney Premium.</p>
-    </section>
-  </main>
+    <div class="export-buttons">
+      <button onclick="exportarPDF()">Exportar PDF</button>
+      <button onclick="exportarExcel()">Exportar Excel</button>
+    </div>
 
-  <footer class="footer">
-    <a href="sobre.html">Sobre</a> |
-    <a href="privacidade.html">Privacidade</a> |
-    <a href="termos.html">Termos de Uso</a>
-  </footer>
+    <div id="listaTransacoes" class="lista-transacoes"></div>
 
-  <script type="module" src="dashboard.js"></script>
+    <button class="btn-limpar" onclick="limparHistorico()">🗑️ Limpar Histórico</button>
+  </section>
+
+  <section id="metas" style="display:none;">
+    <h2>Metas Financeiras</h2>
+    <p>Aqui você definirá e acompanhará suas metas financeiras.</p>
+  </section>
+
+  <section id="relatorios" style="display:none;">
+    <h2>Relatórios</h2>
+    <p>Exporte relatórios completos em PDF ou Excel.</p>
+  </section>
+
+  <section id="config" style="display:none;">
+    <h2>Configurações</h2>
+    <p>Edite suas preferências e dados de conta.</p>
+  </section>
+
+  <section id="premium" style="display:none;">
+    <h2>Área Premium</h2>
+    <p>Recursos exclusivos para usuários premium.</p>
+  </section>
+</main>
+
+<footer class="footer">
+  <a href="sobre.html">Sobre</a> |
+  <a href="privacidade.html">Privacidade</a> |
+  <a href="termos.html">Termos de Uso</a>
+</footer>
+
+<script type="module" src="dashboard.js"></script>
+
 </body>
 </html>
