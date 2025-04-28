@@ -1,16 +1,15 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
-  apiKey: "SUA-API-KEY",
-  authDomain: "SEU-PROJETO.firebaseapp.com",
-  projectId: "SEU-PROJETO",
-  storageBucket: "SEU-PROJETO.appspot.com",
-  messagingSenderId: "SEU-SENDER-ID",
-  appId: "SEU-APP-ID"
+  apiKey: "AIzaSyCmw9A3WvecBRr19MhIX5-wKLf66r-voig",
+  authDomain: "savemoney-7b401.firebaseapp.com",
+  projectId: "savemoney-7b401",
+  storageBucket: "savemoney-7b401.firebasestorage.app",
+  messagingSenderId: "1036605042056",
+  appId: "1:1036605042056:web:1d5ee679915dba328c5e3d",
+  measurementId: "G-LX8LY8FF6M"
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-export { auth };
+const analytics = getAnalytics(app);
