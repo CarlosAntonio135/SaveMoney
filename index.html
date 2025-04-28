@@ -3,99 +3,83 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SaveMoney</title>
+  <title>SaveMoney - Dashboard</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script type="module" src="dashboard.js" defer></script>
 </head>
 <body>
+  <header class="navbar">
+    <div class="logo">SaveMoney</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#dashboard">Dashboard</a></li>
+        <li><a href="#metas">Metas</a></li>
+        <li><a href="#relatorios">Relatórios</a></li>
+        <li><a href="#config">Configurações</a></li>
+      </ul>
+    </nav>
+    <button id="perfilBtn">👤</button>
+  </header>
 
-<header class="navbar">
-  <div class="logo">SaveMoney</div>
-  <nav>
-    <ul class="nav-links">
-      <li><a href="#dashboard">Dashboard</a></li>
-      <li><a href="#metas">Metas</a></li>
-      <li><a href="#relatorios">Relatórios</a></li>
-      <li><a href="#config">Configurações</a></li>
-      <li><a href="#premium">Premium</a></li>
-    </ul>
-  </nav>
-  <button id="perfilBtn" class="perfil-btn">👤</button>
-</header>
+  <main>
+    <section id="dashboard">
+      <div class="container">
+        <input type="text" id="descricao" placeholder="Descrição" />
+        <input type="number" id="valor" placeholder="Valor" />
+        <select id="tipo">
+          <option value="entrada">Entrada</option>
+          <option value="saida">Saída</option>
+        </select>
+        <input type="date" id="data" />
+        <button onclick="adicionarTransacao()">Adicionar</button>
 
-<div id="perfilModal" class="modal">
-  <div class="modal-content">
-    <span id="fecharModal" class="close">&times;</span>
-    <h2>Perfil</h2>
-    <p><strong>Nome:</strong> <span id="userName"></span></p>
-    <p><strong>Email:</strong> <span id="userEmail"></span></p>
-    <button id="logoutBtn">Sair</button>
+        <div class="resumo">
+          <p>Entradas: <span id="totalEntradas">R$ 0,00</span></p>
+          <p>Saídas: <span id="totalSaidas">R$ 0,00</span></p>
+          <p>Saldo Final: <span id="saldoFinal">R$ 0,00</span></p>
+        </div>
+
+        <canvas id="grafico"></canvas>
+        <div class="export-buttons">
+          <button onclick="exportarPDF()">Exportar PDF</button>
+          <button onclick="exportarExcel()">Exportar Excel</button>
+        </div>
+
+        <div id="listaTransacoes"></div>
+      </div>
+    </section>
+
+    <section id="metas" style="display:none;">
+      <h2>Metas Financeiras</h2>
+      <form id="formMeta">
+        <input type="text" id="nomeMeta" placeholder="Nome da Meta" required />
+        <input type="number" id="valorMeta" placeholder="Valor objetivo (R$)" required />
+        <input type="date" id="dataMeta" required />
+        <button type="submit">Criar Meta</button>
+      </form>
+      <div id="listaMetas"></div>
+    </section>
+
+    <section id="relatorios" style="display:none;">
+      <h2>Relatórios</h2>
+      <p>Exporte seus dados em PDF ou Excel.</p>
+    </section>
+
+    <section id="config" style="display:none;">
+      <h2>Configurações</h2>
+      <p>Altere suas preferências e senha futuramente aqui.</p>
+    </section>
+  </main>
+
+  <div id="perfilModal" class="modal">
+    <div class="modal-content">
+      <span id="fecharModal" class="close">&times;</span>
+      <h2>Perfil</h2>
+      <p><strong>Nome:</strong> <span id="userName"></span></p>
+      <p><strong>Email:</strong> <span id="userEmail"></span></p>
+      <button id="logoutBtn">Sair</button>
+    </div>
   </div>
-</div>
-
-<main class="container">
-  <section id="dashboard">
-    <h2>Dashboard Financeiro</h2>
-
-    <div class="formulario">
-      <input type="text" id="descricao" placeholder="Descrição" />
-      <input type="number" id="valor" placeholder="Valor" />
-      <select id="tipo">
-        <option value="entrada">Entrada</option>
-        <option value="saida">Saída</option>
-      </select>
-      <input type="date" id="data" />
-      <button onclick="adicionarTransacao()">Adicionar Transação</button>
-    </div>
-
-    <div class="resumo">
-      <p>Entradas: <span id="totalEntradas">R$ 0,00</span></p>
-      <p>Saídas: <span id="totalSaidas">R$ 0,00</span></p>
-      <p>Saldo Final: <span id="saldoFinal">R$ 0,00</span></p>
-    </div>
-
-    <canvas id="grafico" width="400" height="200"></canvas>
-
-    <div class="export-buttons">
-      <button onclick="exportarPDF()">Exportar PDF</button>
-      <button onclick="exportarExcel()">Exportar Excel</button>
-    </div>
-
-    <div id="listaTransacoes" class="lista-transacoes"></div>
-
-    <button class="btn-limpar" onclick="limparHistorico()">🗑️ Limpar Histórico</button>
-  </section>
-
-  <section id="metas" style="display:none;">
-    <h2>Metas Financeiras</h2>
-    <p>Aqui você definirá e acompanhará suas metas financeiras.</p>
-  </section>
-
-  <section id="relatorios" style="display:none;">
-    <h2>Relatórios</h2>
-    <p>Exporte relatórios completos em PDF ou Excel.</p>
-  </section>
-
-  <section id="config" style="display:none;">
-    <h2>Configurações</h2>
-    <p>Edite suas preferências e dados de conta.</p>
-  </section>
-
-  <section id="premium" style="display:none;">
-    <h2>Área Premium</h2>
-    <p>Recursos exclusivos para usuários premium.</p>
-  </section>
-</main>
-
-<footer class="footer">
-  <a href="sobre.html">Sobre</a> |
-  <a href="privacidade.html">Privacidade</a> |
-  <a href="termos.html">Termos de Uso</a>
-</footer>
-
-<script type="module" src="dashboard.js"></script>
 
 </body>
 </html>
